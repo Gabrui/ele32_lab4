@@ -117,10 +117,10 @@ class finderPrime:
         
         #limitante superior da procura por primos
         maximo = 0
-        if(grauMax > 8):
-            grauMax = 8 #vamos limitar a procura dos primos ate 8 bits ou 255
         for expoente in range(grauMax):
             maximo +=pow(2,expoente)
+        if(grauMax > 8):
+            grauMax = 8 #vamos limitar a procura dos primos ate 8 bits ou 255
         minimo = 2
         if(len(primos) > 0):
             for expoente in range(len(primos)-1):
@@ -162,7 +162,6 @@ def findG(limInf,limSup):
         n = pow(2,L) - 1
         UmDn = operacao.generateArray(pow(2,n)+1,n)
         prime = finder.encontrarPrimos(n)
-    
         for indexG in prime:
         
             lista = prime[indexG]
@@ -174,6 +173,7 @@ def findG(limInf,limSup):
                     listag = Gset.get(n,[])
                     listag.append(primo)
                     Gset[n] = listag
+                    print("\n1+D^",n," Gset: ",Gset)
     return Gset
 Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
 filename = "fatoracao.txt"
