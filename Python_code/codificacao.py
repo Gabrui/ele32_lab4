@@ -40,12 +40,11 @@ class BinOperations:
         
         operando = self.generateArray(0,tam-1)
         contagem = 0
-        for elem in divisor:
+        for elem in range(tam-grauQuociente-1-grauDivisor,tam-grauQuociente):
             
-            if(contagem-grauQuociente >=0):
-                operando[contagem-grauQuociente] = elem
-                
+            operando[elem] = divisor[len(divisor)-grauDivisor+contagem-1]
             contagem+=1
+            
         return operando
     
     def soma(self,dividendo,operando):
@@ -59,17 +58,21 @@ class BinOperations:
 #---------------------------------DIVISAO--------------------------------------    
     def div(self,div,divisor):
         
+        dividendo = deepcopy(div)
         if(self.VerificarPoliNulo(divisor)):
             return 0,0
-        dividendo = deepcopy(div)
+        grauDividendo = self.grauPoli(dividendo)
+        grauDivisor = self.grauPoli(divisor)
+        if(grauDividendo < grauDivisor):
+            return 0,dividendo
+        
         quociente = self.generateArray(0,len(dividendo)-1) #cria um poli nulo
         
         while(True):
         #Grau do Quociente eh igual a diferenca dos graus do divisor e do
         #dividendo, mas nao pode ser negativo. Se for negativo resto igual 
         #dividendo.
-            grauDividendo = self.grauPoli(dividendo)
-            grauDivisor = self.grauPoli(divisor)
+            
             grauQuociente = grauDividendo - grauDivisor
             if(grauQuociente <0):
                 resto = dividendo
@@ -81,8 +84,10 @@ class BinOperations:
             #Na pratica, eh um deslocamento para esquerda dos elementos do 
             #divisor
             operando = self.getOperando(divisor,grauDivisor,grauQuociente,len(dividendo))
-            #Calcula a soma do dividendo com o operando 
+            #Calcula a soma do dividendo com o operando s
             dividendo = self.soma(dividendo,operando)
+            #Calcula o grau do novo dividendo. O divisor nao mudou
+            grauDividendo = self.grauPoli(dividendo)
             #Volta para calcular a diferenca de grau com divisor
 #------------------------------FIM DO WHILE------------------------------------
         return quociente,resto
@@ -175,6 +180,7 @@ def findG(limInf,limSup):
                     Gset[n] = listag
                     print("\n1+D^",n," Gset: ",Gset)
     return Gset
+
 Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
 filename = "fatoracao.txt"
 arquivo = open(filename,mode ='w')
@@ -183,13 +189,15 @@ for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
 arquivo.write(texto)
 #--------------------------Area de testes--------------------------------------
+op = BinOperations()
 Gs = findG(3,4)
-U = BinOperations()
-U = U.generateArray(pow(2,7)+1,7)
-tst = BinOperations()
-a = tst.generateArray(4,2)
-b = tst.generateArray(3,2)
-print(a," / ",b," = ",tst.div(a,b))
+U = op.generateArray(pow(2,7)+1,7)
+a = op.generateArray(4,5)
+b = op.generateArray(3,2)
+print("entrou")
+res = op.div(a,b)
+print("saiu")
+print(a," / ",b," = ",res)
 print("\n Fatores de ",U," igual a |=> ",Gs)
 #------------------------------------------------------------------------------
 
