@@ -1,0 +1,195 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 22 15:20:33 2017
+
+@author: Dylan N. Sugimoto
+"""
+
+from copy import deepcopy
+from math import sqrt
+
+class BinOperations:
+    
+    def generateArray(self,number,grau):
+        
+        _bitArray=[]
+        bitNumber = bin(number)[2:].zfill(grau+1)
+        for elem in bitNumber:
+            
+            if(elem =='1'):
+                _bitArray.append(1)
+            else:
+                _bitArray.append(0)
+        
+        return _bitArray
+    
+    def grauPoli(self,poli):
+        
+        contagem = len(poli)-1
+        grau = 0
+        for elem in poli:
+            
+            if(elem == 1):
+                grau = contagem
+                break
+            contagem-=1
+            
+        return grau
+    
+    def getOperando(self,divisor,grauDivisor,grauQuociente,tam):
+        
+        operando = self.generateArray(0,tam-1)
+        contagem = 0
+        for elem in divisor:
+            
+            if(contagem-grauQuociente >=0):
+                operando[contagem-grauQuociente] = elem
+                
+            contagem+=1
+        return operando
+    
+    def soma(self,dividendo,operando):
+        
+        resultado = dividendo
+        for contagem in range(len(dividendo)):
+            
+            resultado[contagem] = dividendo[contagem]^operando[contagem]
+        return resultado
+    
+#---------------------------------DIVISAO--------------------------------------    
+    def div(self,div,divisor):
+        
+        if(self.VerificarPoliNulo(divisor)):
+            return 0,0
+        dividendo = deepcopy(div)
+        quociente = self.generateArray(0,len(dividendo)-1) #cria um poli nulo
+        
+        while(True):
+        #Grau do Quociente eh igual a diferenca dos graus do divisor e do
+        #dividendo, mas nao pode ser negativo. Se for negativo resto igual 
+        #dividendo.
+            grauDividendo = self.grauPoli(dividendo)
+            grauDivisor = self.grauPoli(divisor)
+            grauQuociente = grauDividendo - grauDivisor
+            if(grauQuociente <0):
+                resto = dividendo
+                break
+#------------------------------------------------------------------------------
+            quociente[grauQuociente] = 1
+            #Calcula o operando que vai somar com o dividendo
+            #Operando eh o produto do quociente com o divisor
+            #Na pratica, eh um deslocamento para esquerda dos elementos do 
+            #divisor
+            operando = self.getOperando(divisor,grauDivisor,grauQuociente,len(dividendo))
+            #Calcula a soma do dividendo com o operando 
+            dividendo = self.soma(dividendo,operando)
+            #Volta para calcular a diferenca de grau com divisor
+#------------------------------FIM DO WHILE------------------------------------
+        return quociente,resto
+#------------------------------FIM DA DIVISAO----------------------------------
+        
+    def VerificarPoliNulo(self,poli):
+        
+        for elem in poli:
+            
+            if(elem==1):
+                return False #Nao eh polinomio Nulo
+        return True #eh polinomio nulo
+    
+#---------------------------FIM DA CLASSE--------------------------------------
+
+class finderPrime:
+    
+    def __init__(self):
+        
+        self.primos = {}
+        
+        
+    def encontrarPrimos(self,grauMax,tamanho = None):
+        
+        if(tamanho == None):
+            tamanho = grauMax
+        #Instancia um BinOperations para realizar as operacoes binarias necessarias
+        operacao = BinOperations()
+        
+        #dicionario de listas que contem polinomios primos. Grau do polinomio como indexador
+        primos =self.primos
+        
+        #limitante superior da procura por primos
+        maximo = 0
+        if(grauMax > 8):
+            grauMax = 8 #vamos limitar a procura dos primos ate 8 bits ou 255
+        for expoente in range(grauMax):
+            maximo +=pow(2,expoente)
+        minimo = 2
+        if(len(primos) > 0):
+            for expoente in range(len(primos)-1):
+                minimo += pow(2,expoente)
+            minimo+=1
+#------------------------------Procura por primos------------------------------
+        for elem in range(minimo,maximo):
+            
+            analise = operacao.generateArray(elem,tamanho)
+            ehPrimo = True
+            for anteriores in range(2,elem):
+                
+                divisor = operacao.generateArray(anteriores,tamanho)
+                resultado = operacao.div(analise,divisor)
+                if(operacao.VerificarPoliNulo(resultado[1])):
+                    ehPrimo = False
+                    break
+                if(anteriores >= sqrt(elem) ):
+                    break
+            if(ehPrimo ==True):
+                
+                grau = operacao.grauPoli(analise)
+                #Pega a lista de primos do grau do analise
+                #Se nao tiver, recebe uma lista vazia do primos
+                listap = primos.get(grau,[]) 
+                listap.append(analise) #adiciona o primo na lista
+                primos[grau] = listap  #adiciona no dicionario primos
+#--------------------------------FIM DA PROCURA--------------------------------
+        self.primos = primos
+        return primos
+#----------------------------FIM DO METODO DE PROCURA--------------------------
+#----------------------------FIM DA CLASSE FINDER------------------------------        
+
+def findG(limInf,limSup):
+    finder = finderPrime()
+    operacao = BinOperations()
+    Gset = {}
+    for L in range(limInf,limSup):
+        n = pow(2,L) - 1
+        UmDn = operacao.generateArray(pow(2,n)+1,n)
+        prime = finder.encontrarPrimos(n)
+    
+        for indexG in prime:
+        
+            lista = prime[indexG]
+            for primo in lista:
+            
+                res = operacao.div(UmDn,primo)
+                if(operacao.VerificarPoliNulo(res[1])):
+                
+                    listag = Gset.get(n,[])
+                    listag.append(primo)
+                    Gset[n] = listag
+    return Gset
+Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+filename = "fatoracao.txt"
+arquivo = open(filename,mode ='w')
+texto = ""
+for index in Gset:
+    texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
+arquivo.write(texto)
+#--------------------------Area de testes--------------------------------------
+Gs = findG(3,4)
+U = BinOperations()
+U = U.generateArray(pow(2,7)+1,7)
+tst = BinOperations()
+a = tst.generateArray(4,2)
+b = tst.generateArray(3,2)
+print(a," / ",b," = ",tst.div(a,b))
+print("\n Fatores de ",U," igual a |=> ",Gs)
+#------------------------------------------------------------------------------
+
