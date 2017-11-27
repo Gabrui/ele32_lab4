@@ -78,7 +78,7 @@ class BinOperations:
                 resto = dividendo
                 break
 #------------------------------------------------------------------------------
-            quociente[grauQuociente] = 1
+            quociente[len(quociente) - grauQuociente-1] = 1
             #Calcula o operando que vai somar com o dividendo
             #Operando eh o produto do quociente com o divisor
             #Na pratica, eh um deslocamento para esquerda dos elementos do 
@@ -122,10 +122,11 @@ class finderPrime:
         
         #limitante superior da procura por primos
         maximo = 0
-        for expoente in range(grauMax):
-            maximo +=pow(2,expoente)
         if(grauMax > 8):
             grauMax = 8 #vamos limitar a procura dos primos ate 8 bits ou 255
+        for expoente in range(grauMax):
+            maximo +=pow(2,expoente)
+        
         minimo = 2
         if(len(primos) > 0):
             for expoente in range(len(primos)-1):
@@ -166,19 +167,30 @@ def findG(limInf,limSup):
     for L in range(limInf,limSup):
         n = pow(2,L) - 1
         UmDn = operacao.generateArray(pow(2,n)+1,n)
+        print("\n1+D^",n,)
         prime = finder.encontrarPrimos(n)
+        dividir = UmDn
         for indexG in prime:
         
             lista = prime[indexG]
             for primo in lista:
             
-                res = operacao.div(UmDn,primo)
+                res = operacao.div(dividir,primo)
                 if(operacao.VerificarPoliNulo(res[1])):
                 
+                    dividir = res[0]
                     listag = Gset.get(n,[])
                     listag.append(primo)
                     Gset[n] = listag
-                    print("\n1+D^",n," Gset: ",Gset)
+                    print(" Gset: ",Gset)
+                    #print("Dividir: ",dividir)
+                if(operacao.grauPoli(dividir) == 0):
+                    #Grau do dividir igual a zero significa que dividir == 1
+                    #print(dividir)
+                    break
+            if(operacao.grauPoli(dividir) == 0):
+                #Grau do dividir igual a zero significa que dividir == 1
+                break
     return Gset
 
 Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
