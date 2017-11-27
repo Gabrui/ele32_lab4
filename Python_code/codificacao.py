@@ -278,3 +278,7 @@ print(a," ** ",17," = ",res)
 #print("\n Fatores de ",U," igual a |=> ",Gs)
 #------------------------------------------------------------------------------
 
+"""
+Observacoes de coisas para fazer:  
+Deve haver 1 bug na contagem das multiplicidades na funcao de fatoracao
+"""
