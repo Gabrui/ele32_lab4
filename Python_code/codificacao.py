@@ -135,10 +135,8 @@ class BinOperations:
             if(menor[index] == 1):
             #desloca o maior de index para esquerda e atribui para o parcial
                 parcial = self.desleft(maior,len(menor)-index-1)
-                print("parcial: ",parcial)
             #soma no resultado
                 resultado = self.soma(resultado,parcial)
-                print(resultado)
             
         return resultado
         
@@ -212,20 +210,38 @@ def findG(limInf,limSup):
         print("\n1+D^",n,)
         prime = finder.encontrarPrimos(n)
         dividir = UmDn
+        contador = 0
         for indexG in prime:
         
             lista = prime[indexG]
             for primo in lista:
-            
-                res = operacao.div(dividir,primo)
-                if(operacao.VerificarPoliNulo(res[1])):
+                divisivel = True
+                dividiu = False
+                while(divisivel):
+                    res = operacao.div(dividir,primo)
+                    if(operacao.VerificarPoliNulo(res[1])):
                 
-                    dividir = res[0]
-                    listag = Gset.get(n,[])
-                    listag.append(primo)
-                    Gset[n] = listag
-                    print(" Gset: ",Gset)
-                    #print("Dividir: ",dividir)
+                        dividir = res[0]
+                        dictlistgm = Gset.get(n,{})
+                           
+                        listagm = dictlistgm.get(contador,[[],0])
+                        dividiu = True
+                        #atualizo o primo, se for o mesmo nao muda nada
+                        if(listagm[1]==0):
+                            listag = listagm[0]
+                            listag.append(primo)
+                            listagm[0] = listag
+                        #atualizo a multiplicidade
+                        listagm[1]+=1
+                        dictlistgm[contador] = listagm
+                        Gset[n] = dictlistgm
+                        print(" Gset: ",Gset)
+                        divisivel =True
+                        #print("Dividir: ",dividir)
+                    else:
+                        divisivel = False
+                if(dividiu):
+                    contador+=1
                 if(operacao.grauPoli(dividir) == 0):
                     #Grau do dividir igual a zero significa que dividir == 1
                     #print(dividir)
@@ -235,8 +251,8 @@ def findG(limInf,limSup):
                 break
     return Gset
 
-"""Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
-filename = "fatoracao.txt"
+Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+"""filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 for index in Gset:
@@ -247,12 +263,14 @@ op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
 U = op.generateArray(pow(2,7)+1,7)
-a = op.generateArray(4,5)
-b = op.generateArray(3,2)
+a = op.generateArray(pow(2,15)+1,15)
+#b = op.generateArray(pow(2,255)+1,255)
 print("entrou")
-res = op.multi(a,b)
+res = a
+for contar in range(17): 
+    res = op.multi(a,res)
 print("saiu")
-print(a," * ",b," = ",res)
+print(a," ** ",17," = ",res)
 #print("\n Fatores de ",U," igual a |=> ",Gs)
 #------------------------------------------------------------------------------
 
