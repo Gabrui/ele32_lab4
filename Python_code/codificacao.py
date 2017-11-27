@@ -49,10 +49,16 @@ class BinOperations:
     
     def soma(self,dividendo,operando):
         
-        resultado = dividendo
-        for contagem in range(len(dividendo)):
+        if(len(dividendo) >= len(operando)):
+            menor = deepcopy(operando)
+            maior = deepcopy(dividendo)
+        else:
+            menor = deepcopy(dividendo)
+            maior = deepcopy(operando)
+        resultado = maior
+        for contagem in range(len(menor)):
             
-            resultado[contagem] = dividendo[contagem]^operando[contagem]
+            resultado[len(maior)-len(menor)+contagem] = maior[len(maior)-len(menor)+contagem]^menor[contagem]
         return resultado
     
 #---------------------------------DIVISAO--------------------------------------    
@@ -103,14 +109,13 @@ class BinOperations:
     
     def desleft(self,poli,quantDes):
         
-        deslocado = deepcopy(poli)
-        if(quantDes > 0):
+        if(quantDes <= 0):
+            return deepcopy(poli)
+        else:
+            deslocado = self.generateArray(0,len(poli)+quantDes-1)
             for index in range(len(poli)):
-            
-                if(index+quantDes < len(poli)):
-                    deslocado[index] = poli[quantDes+index]
-                else:
-                    deslocado[index] = 0
+
+                deslocado[index] = poli[index]
         return deslocado
     
     def multi(self,fat1,fat2):
@@ -127,9 +132,9 @@ class BinOperations:
             grauMenor = grauFat1
         #parcial serve para armazenar resultado parcial da multiplicacao
         # deve ser somado com o resultado
-        parcial = deepcopy(maior)
+        parcial = self.generateArray(0,grauFat1+grauFat2)
         #resultado tem tamanho do maior
-        resultado = self.generateArray(0,len(maior)-1)
+        resultado = self.generateArray(0,grauFat1+grauFat2)
         for index in range(len(menor)-grauMenor-1,len(menor)):
             
             if(menor[index] == 1):
@@ -137,7 +142,6 @@ class BinOperations:
                 parcial = self.desleft(maior,len(menor)-index-1)
             #soma no resultado
                 resultado = self.soma(resultado,parcial)
-            
         return resultado
         
     
@@ -251,7 +255,7 @@ def findG(limInf,limSup):
                 break
     return Gset
 
-Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+#Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
 """filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
