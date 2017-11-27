@@ -195,7 +195,7 @@ def findG(limInf,limSup):
 
 Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
 filename = "fatoracao.txt"
-arquivo = open(filename,mode ='w')
+arquivo = open(filename,mode ='a')
 texto = ""
 for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
