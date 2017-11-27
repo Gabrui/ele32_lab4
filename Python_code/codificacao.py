@@ -101,6 +101,48 @@ class BinOperations:
                 return False #Nao eh polinomio Nulo
         return True #eh polinomio nulo
     
+    def desleft(self,poli,quantDes):
+        
+        deslocado = deepcopy(poli)
+        if(quantDes > 0):
+            for index in range(len(poli)):
+            
+                if(index+quantDes < len(poli)):
+                    deslocado[index] = poli[quantDes+index]
+                else:
+                    deslocado[index] = 0
+        return deslocado
+    
+    def multi(self,fat1,fat2):
+        
+        grauFat1 = self.grauPoli(fat1)
+        grauFat2 = self.grauPoli(fat2)
+        if(grauFat1 > grauFat2):
+            menor = fat2
+            maior = fat1
+            grauMenor = grauFat2
+        else:
+            menor = fat1
+            maior = fat2
+            grauMenor = grauFat1
+        #parcial serve para armazenar resultado parcial da multiplicacao
+        # deve ser somado com o resultado
+        parcial = deepcopy(maior)
+        #resultado tem tamanho do maior
+        resultado = self.generateArray(0,len(maior)-1)
+        for index in range(len(menor)-grauMenor-1,len(menor)):
+            
+            if(menor[index] == 1):
+            #desloca o maior de index para esquerda e atribui para o parcial
+                parcial = self.desleft(maior,len(menor)-index-1)
+                print("parcial: ",parcial)
+            #soma no resultado
+                resultado = self.soma(resultado,parcial)
+                print(resultado)
+            
+        return resultado
+        
+    
 #---------------------------FIM DA CLASSE--------------------------------------
 
 class finderPrime:
@@ -193,24 +235,24 @@ def findG(limInf,limSup):
                 break
     return Gset
 
-Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+"""Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
 filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
-arquivo.write(texto)
+arquivo.write(texto)"""
 #--------------------------Area de testes--------------------------------------
 op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
-Gs = findG(3,4)
+#Gs = findG(3,4)
 U = op.generateArray(pow(2,7)+1,7)
 a = op.generateArray(4,5)
 b = op.generateArray(3,2)
 print("entrou")
-res = op.div(a,b)
+res = op.multi(a,b)
 print("saiu")
-print(a," / ",b," = ",res)
-print("\n Fatores de ",U," igual a |=> ",Gs)
+print(a," * ",b," = ",res)
+#print("\n Fatores de ",U," igual a |=> ",Gs)
 #------------------------------------------------------------------------------
 
