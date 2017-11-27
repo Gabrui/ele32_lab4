@@ -202,6 +202,7 @@ for index in Gset:
 arquivo.write(texto)
 #--------------------------Area de testes--------------------------------------
 op = BinOperations()
+print("\n--------------------------Area de Testes-----------------------------")
 Gs = findG(3,4)
 U = op.generateArray(pow(2,7)+1,7)
 a = op.generateArray(4,5)
