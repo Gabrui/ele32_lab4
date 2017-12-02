@@ -224,7 +224,7 @@ def findG(limInf,limSup):
                 while(divisivel):
                     res = operacao.div(dividir,primo)
                     if(operacao.VerificarPoliNulo(res[1])):
-                
+                        
                         dividir = res[0] #passa o quociente para ser dividendo
                         dictlistgm = Gset.get(n,{}) #pega o dicionario referente ao 1+D^n
                            
@@ -237,6 +237,7 @@ def findG(limInf,limSup):
                             listagm[0] = listag
                         #atualizo a multiplicidade
                         listagm[1]+=1
+                        print("primo: ", primo,"multiplicidade: ",listagm[1])
                         dictlistgm[contador] = listagm#bota de volta a lista no dicionario
                         Gset[n] = dictlistgm#bota de volta o dicionario no dicionario
                         print(" Gset: ",Gset)
@@ -266,19 +267,32 @@ arquivo.write(texto)"""
 op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
-U = op.generateArray(pow(2,7)+1,7)
-a = op.generateArray(pow(2,15)+1,15)
+#U = op.generateArray(pow(2,7)+1,7)
+#a = op.generateArray(pow(2,15)+1,15)
 #b = op.generateArray(pow(2,255)+1,255)
+#b = op.generateArray(9,15)
+#a = op.generateArray(5,8)
 print("entrou")
-res = a
-for contar in range(17): 
-    res = op.multi(a,res)
+#res = op.div(b,a)
+#d = res
+#c = res[0]
+#res = op.div(c,a)
+#for contar in range(17): 
+#    res = op.multi(a,res)
 print("saiu")
-print(a," ** ",17," = ",res)
+#print(a," ** ",17," = ",res)
 #print("\n Fatores de ",U," igual a |=> ",Gs)
+#print(a)
+#print(b)
+#print("b / a == ",d)
+#print(op.VerificarPoliNulo(d[1]))
+#print(a)
+#print(c)
+#print("c / a == ",res)
 #------------------------------------------------------------------------------
 
 """
 Observacoes de coisas para fazer:  
-Deve haver 1 bug na contagem das multiplicidades na funcao de fatoracao
+Parece que tá faltando primo divisor de 1+D^255
+Deve ter primo maior do que 8 bits que divide 1+D^255
 """
