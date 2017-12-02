@@ -240,7 +240,7 @@ def findG(limInf,limSup):
                         #print("primo: ", primo,"multiplicidade: ",listagm[1])
                         dictlistgm[contador] = listagm#bota de volta a lista no dicionario
                         Gset[n] = dictlistgm#bota de volta o dicionario no dicionario
-                        print(" Gset: ",Gset)
+                        #print(" Gset: ",Gset)
                         divisivel =True#seta para tentar dividir de novo pelo mesmo primo divisor.
                         #print("Dividir: ",dividir)
                     else:
