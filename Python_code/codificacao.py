@@ -225,25 +225,25 @@ def findG(limInf,limSup):
                     res = operacao.div(dividir,primo)
                     if(operacao.VerificarPoliNulo(res[1])):
                 
-                        dividir = res[0]
-                        dictlistgm = Gset.get(n,{})
+                        dividir = res[0] #passa o quociente para ser dividendo
+                        dictlistgm = Gset.get(n,{}) #pega o dicionario referente ao 1+D^n
                            
-                        listagm = dictlistgm.get(contador,[[],0])
-                        dividiu = True
+                        listagm = dictlistgm.get(contador,[[],0])#pega a lista que contem o primo divisor e a multiplicidade
+                        dividiu = True #seta que achou um divisor
                         #atualizo o primo, se for o mesmo nao muda nada
-                        if(listagm[1]==0):
+                        if(listagm[1]==0):#primeira vez.
                             listag = listagm[0]
                             listag.append(primo)
                             listagm[0] = listag
                         #atualizo a multiplicidade
                         listagm[1]+=1
-                        dictlistgm[contador] = listagm
-                        Gset[n] = dictlistgm
+                        dictlistgm[contador] = listagm#bota de volta a lista no dicionario
+                        Gset[n] = dictlistgm#bota de volta o dicionario no dicionario
                         print(" Gset: ",Gset)
-                        divisivel =True
+                        divisivel =True#seta para tentar dividir de novo pelo mesmo primo divisor.
                         #print("Dividir: ",dividir)
                     else:
-                        divisivel = False
+                        divisivel = False#sair do while
                 if(dividiu):
                     contador+=1
                 if(operacao.grauPoli(dividir) == 0):
