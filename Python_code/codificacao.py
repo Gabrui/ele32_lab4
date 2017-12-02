@@ -156,7 +156,34 @@ class BinOperations:
             
         return simplificado
     
-    
+    def generateG(self,lista,taxa):
+        #retorna uma matrix G de geracao de codificacao
+        
+        
+        #retira zeros à esquerda do grau
+        gs = self.simplificaArray(lista)
+        # colunas = (grau+1)/(1-taxa)
+        # linhas = colunas * taxa
+        tamanhoLinha = int(len(gs)/(1-taxa))
+        linha = deepcopy(gs)
+        
+        diferenca = tamanhoLinha-len(gs)
+        for index in range(diferenca):
+            #preenche com zeros a esquerda
+            linha.append(0)
+        
+        #inicializa matrix geradora
+        G=[]
+        #linhas
+        k = int(tamanhoLinha*taxa)
+        
+        for index in range(k):
+            
+            G.append(deepcopy(linha))
+            linha[index] = 0
+            for i in range(len(gs)):
+                linha[index+1+i] = gs[i]
+        return G
     
 #---------------------------FIM DA CLASSE--------------------------------------
 
@@ -281,10 +308,10 @@ op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
 #U = op.generateArray(pow(2,7)+1,7)
-a = op.generateArray(pow(2,15)+1,41)
+#a = op.generateArray(pow(2,15)+1,41)
 #b = op.generateArray(pow(2,255)+1,255)
 #b = op.generateArray(9,15)
-#a = op.generateArray(505,8)
+a = op.generateArray(505,8)
 print("entrou")
 #res = op.div(b,a)
 #d = res
@@ -302,7 +329,7 @@ print("saiu")
 print(a)
 #print(c)
 #print("c / a == ",res)
-print("\n\n\n",op.simplificarArray(a))
+print("\n\n\n",op.generateG(a,1/2))
 #------------------------------------------------------------------------------
 
 """
