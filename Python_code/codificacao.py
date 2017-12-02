@@ -143,7 +143,20 @@ class BinOperations:
             #soma no resultado
                 resultado = self.soma(resultado,parcial)
         return resultado
+    def simplificaArray(self,Lista):
         
+        grau = self.grauPoli(Lista)
+        if(len(Lista)==grau+1):
+            return Lista
+            
+        simplificado = self.generateArray(0,grau)
+        for index in range(grau+1):
+            
+            simplificado[index] = Lista[len(Lista)-grau-1+index]
+            
+        return simplificado
+    
+    
     
 #---------------------------FIM DA CLASSE--------------------------------------
 
