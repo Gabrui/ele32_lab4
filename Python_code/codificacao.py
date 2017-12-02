@@ -184,6 +184,36 @@ class BinOperations:
             for i in range(len(gs)):
                 linha[index+1+i] = gs[i]
         return G
+  
+    def pesoHamming(self,lista):
+        
+        contar = 0
+        for elem in lista:
+            
+            if(elem == 1):
+                contar+=1
+        return contar
+    
+    def distMin(self,G):
+        #retorna a distancia minima de uma matrix geradora G
+        
+        Gcopiado = deepcopy(G)
+        linha1 = deepcopy(Gcopiado[0])
+        primeiro = True
+        for linha in Gcopiado[1:]:
+            
+            resultado = self.soma(linha1,linha)
+            dist = self.pesoHamming(resultado)
+            if(primeiro):
+                distMin = dist
+                primeiro = False
+           
+            if(dist < distMin):
+                
+                distMin = dist
+                
+                
+        return distMin
     
 #---------------------------FIM DA CLASSE--------------------------------------
 
@@ -329,7 +359,9 @@ print("saiu")
 print(a)
 #print(c)
 #print("c / a == ",res)
-print("\n\n\n",op.generateG(a,1/2))
+matrixG = op.generateG(a,1/2) 
+print("\n\n\n",matrixG)
+print("distancia minima: ",op.distMin(matrixG))
 #------------------------------------------------------------------------------
 
 """
