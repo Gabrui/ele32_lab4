@@ -144,7 +144,7 @@ class BinOperations:
                 resultado = self.soma(resultado,parcial)
         return resultado
     def simplificaArray(self,Lista):
-        
+        #retorna uma lista sem os zeros à esquerda do 1 mais a esquerda.
         grau = self.grauPoli(Lista)
         if(len(Lista)==grau+1):
             return Lista
@@ -269,19 +269,19 @@ def findG(limInf,limSup):
                 break
     return Gset
 
-Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
-filename = "fatoracao.txt"
+#Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+"""filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
-arquivo.write(texto)
+arquivo.write(texto)"""
 #--------------------------Area de testes--------------------------------------
 op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
 #U = op.generateArray(pow(2,7)+1,7)
-#a = op.generateArray(pow(2,15)+1,15)
+a = op.generateArray(pow(2,15)+1,41)
 #b = op.generateArray(pow(2,255)+1,255)
 #b = op.generateArray(9,15)
 #a = op.generateArray(505,8)
@@ -299,9 +299,10 @@ print("saiu")
 #print(b)
 #print("b / a == ",d)
 #print(op.VerificarPoliNulo(d[1]))
-#print(a)
+print(a)
 #print(c)
 #print("c / a == ",res)
+print("\n\n\n",op.simplificarArray(a))
 #------------------------------------------------------------------------------
 
 """
