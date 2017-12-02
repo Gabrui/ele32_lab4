@@ -88,7 +88,7 @@ class BinOperations:
             #Calcula o operando que vai somar com o dividendo
             #Operando eh o produto do quociente com o divisor
             #Na pratica, eh um deslocamento para esquerda dos elementos do 
-            #divisor
+            #divisor  
             operando = self.getOperando(divisor,grauDivisor,grauQuociente,len(dividendo))
             #Calcula a soma do dividendo com o operando s
             dividendo = self.soma(dividendo,operando)
@@ -166,8 +166,8 @@ class finderPrime:
         
         #limitante superior da procura por primos
         maximo = 0
-        if(grauMax > 8):
-            grauMax = 8 #vamos limitar a procura dos primos ate 8 bits ou 255
+        if(grauMax > 9):
+            grauMax = 9#vamos limitar a procura dos primos ate 9 bits ou 511
         for expoente in range(grauMax):
             maximo +=pow(2,expoente)
         
@@ -211,7 +211,7 @@ def findG(limInf,limSup):
     for L in range(limInf,limSup):
         n = pow(2,L) - 1
         UmDn = operacao.generateArray(pow(2,n)+1,n)
-        print("\n1+D^",n,)
+        #print("\n1+D^",n,)
         prime = finder.encontrarPrimos(n)
         dividir = UmDn
         contador = 0
@@ -237,7 +237,7 @@ def findG(limInf,limSup):
                             listagm[0] = listag
                         #atualizo a multiplicidade
                         listagm[1]+=1
-                        print("primo: ", primo,"multiplicidade: ",listagm[1])
+                        #print("primo: ", primo,"multiplicidade: ",listagm[1])
                         dictlistgm[contador] = listagm#bota de volta a lista no dicionario
                         Gset[n] = dictlistgm#bota de volta o dicionario no dicionario
                         print(" Gset: ",Gset)
@@ -256,13 +256,13 @@ def findG(limInf,limSup):
                 break
     return Gset
 
-#Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
-"""filename = "fatoracao.txt"
+Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
-arquivo.write(texto)"""
+arquivo.write(texto)
 #--------------------------Area de testes--------------------------------------
 op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
@@ -271,7 +271,7 @@ print("\n--------------------------Area de Testes-----------------------------")
 #a = op.generateArray(pow(2,15)+1,15)
 #b = op.generateArray(pow(2,255)+1,255)
 #b = op.generateArray(9,15)
-#a = op.generateArray(5,8)
+#a = op.generateArray(505,8)
 print("entrou")
 #res = op.div(b,a)
 #d = res
