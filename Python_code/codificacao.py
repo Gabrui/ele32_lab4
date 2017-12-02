@@ -215,6 +215,24 @@ class BinOperations:
                 
         return distMin
     
+    def inc(self, lista):
+        
+        resposta = deepcopy(lista)
+        resposta[len(lista)-1] = lista[len(lista)-1]^1 
+        if(lista[len(lista)-1]==0):
+            return resposta
+        else:
+            #propaga o carry
+            carry = 1
+            for index in reversed(range(len(lista))):
+            
+                #propaga o carry
+                resposta[index] = lista[index]^carry
+                #se lista[index] == zero
+                if(lista[index]==0):
+                    #para de propaga carry. acabou.
+                    break
+        return resposta
 #---------------------------FIM DA CLASSE--------------------------------------
 
 class finderPrime:
@@ -326,7 +344,42 @@ def findG(limInf,limSup):
                 break
     return Gset
 
-#Gset = findG(3,9) #L vai de 3 ate 8 [3,8[
+def generateFatores(dictPrimo):
+    
+    op = BinOperations()
+    #combinacao tem tamanho igual a quantidade de primos
+    #comeca com 1, ou seja, nao serve o fator 0.
+    combinacao = op.generateArray(1,len(dictPrimo)-1)
+    
+    dictFatores ={}
+    quantFatores = 0
+    peso = op.pesoHamming(combinacao)
+    continuar = True
+    while( continuar):
+    
+        fator = op.generateArray(1,0)
+        #gera um fator
+        for index in range(len(combinacao)):
+            
+            if(combinacao[index] == 1):
+                
+                LprimoMulti =dictPrimo[index]
+                primo = LprimoMulti[0]
+                primo = primo[0]
+                fator = op.multi(fator,primo)
+        #calcula peso hamming
+        peso = op.pesoHamming(combinacao)
+        if(peso == len(combinacao)):
+            continuar = False
+        #coloca o fator no dicionario
+        dictFatores[quantFatores] = fator
+        #atualiza a contagem
+        quantFatores+=1
+        #proxima combinacao de primos
+        combinacao = op.inc(combinacao)
+    return dictFatores
+    
+#Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 """filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
@@ -338,10 +391,10 @@ op = BinOperations()
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
 #U = op.generateArray(pow(2,7)+1,7)
-#a = op.generateArray(pow(2,15)+1,41)
+#a = op.generateArray(pow(2,7)+1,7)
 #b = op.generateArray(pow(2,255)+1,255)
 #b = op.generateArray(9,15)
-a = op.generateArray(505,8)
+#a = op.generateArray(505,8)
 print("entrou")
 #res = op.div(b,a)
 #d = res
@@ -356,12 +409,15 @@ print("saiu")
 #print(b)
 #print("b / a == ",d)
 #print(op.VerificarPoliNulo(d[1]))
-print(a)
+#print(a)
 #print(c)
 #print("c / a == ",res)
-matrixG = op.generateG(a,1/2) 
-print("\n\n\n",matrixG)
-print("distancia minima: ",op.distMin(matrixG))
+dictPrimos = findG(8,9)
+print(dictPrimos)
+primos = dictPrimos.get(255)
+fatores = generateFatores(primos)
+print("\n\n\n",fatores)
+#print("distancia minima: ",op.distMin(matrixG))
 #------------------------------------------------------------------------------
 
 """
