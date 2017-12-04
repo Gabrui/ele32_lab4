@@ -379,15 +379,36 @@ def generateFatores(dictPrimo):
         combinacao = op.inc(combinacao)
     return dictFatores
     
-#Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
+Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 """filename = "fatoracao.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
-arquivo.write(texto)"""
+arquivo.write(texto)
+arquivo.close()
+"""
+
 #--------------------------Area de testes--------------------------------------
 op = BinOperations()
+filename = "primos_grau.txt"
+arquivo = open(filename,mode ='a')
+texto = ""
+dicwrite ={}
+
+for index in Gset:
+    dicPoli = Gset.get(index)
+    dicsub = {}
+    for key in dicPoli:
+        tuplaLista = dicPoli.get(key)
+        listaLista = tuplaLista[0]
+        dicsub[key] = op.grauPoli(listaLista[0])
+    dicwrite[index] = dicsub
+print(dicwrite)
+for index in Gset:
+    texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(dicwrite[index])
+arquivo.write(texto)
+arquivo.close()
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
 #U = op.generateArray(pow(2,7)+1,7)
@@ -412,11 +433,11 @@ print("saiu")
 #print(a)
 #print(c)
 #print("c / a == ",res)
-dictPrimos = findG(8,9)
-print(dictPrimos)
-primos = dictPrimos.get(255)
-fatores = generateFatores(primos)
-print("\n\n\n",fatores)
+#dictPrimos = findG(8,9)
+#print(dictPrimos)
+#primos = dictPrimos.get(255)
+#fatores = generateFatores(primos)
+#print("\n\n\n",fatores)
 #print("distancia minima: ",op.distMin(matrixG))
 #------------------------------------------------------------------------------
 
