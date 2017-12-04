@@ -379,19 +379,25 @@ def generateFatores(dictPrimo):
         combinacao = op.inc(combinacao)
     return dictFatores
     
-Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
-"""filename = "fatoracao.txt"
+#Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
+op = BinOperations()
+L = 7
+Gset = findG(L,L+1)
+numero = pow(2,L)-1
+dicFatores = generateFatores(Gset[numero])
+filename = "fatores_"+str(numero)+".txt"
 arquivo = open(filename,mode ='a')
 texto = ""
-for index in Gset:
-    texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(Gset[index])
+texto +="\n 1 + D^"+str(numero) +"\n Fatores: \n" +"   " 
+for index in dicFatores:
+    texto +="\n" +str(op.simplificaArray(dicFatores[index]))
 arquivo.write(texto)
 arquivo.close()
-"""
+
 
 #--------------------------Area de testes--------------------------------------
-op = BinOperations()
-filename = "primos_grau.txt"
+
+"""filename = "primos_grau.txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 dicwrite ={}
@@ -408,7 +414,7 @@ print(dicwrite)
 for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(dicwrite[index])
 arquivo.write(texto)
-arquivo.close()
+arquivo.close()"""
 print("\n--------------------------Area de Testes-----------------------------")
 #Gs = findG(3,4)
 #U = op.generateArray(pow(2,7)+1,7)
