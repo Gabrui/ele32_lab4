@@ -410,7 +410,29 @@ def generateFatores(dictPrimo):
 #    texto +="\n" +str(op.simplificaArray(dicFatores[index]))
 #arquivo.write(texto)
 #arquivo.close()
-
+#---------------Algoritmo de geracao da matrix G & Impressao-------------------
+op = BinOperations()
+L = 4
+Gset = findG(L,L+1)
+numero = pow(2,L)-1
+print(numero)
+dicFatores = generateFatores(Gset[numero])
+filename = "Gmatrix_"+str(numero)+".txt"
+arquivo = open(filename,mode ='a')
+texto = "Matrix Geradora de 1 + D^" + str(numero)+"\n\n\n"
+for key in dicFatores:
+    
+    fator = dicFatores.get(key)
+    grauFator = op.grauPoli(fator)
+    if( grauFator <= (numero -ceil(numero/2) )):
+        G = op.generateG(fator,ceil(numero/2),numero)
+        texto += "\n--------------------------------------------\nMatriz G: \n"
+        for elem in G:
+            texto+= "   "+str(elem)+"\n"
+        texto+="\n DistMIN: "+str(op.distMin(G)) + "\n"
+arquivo.write(texto)
+arquivo.close()
+#------------------------------------------------------------------------------
 
 #--------------------------Area de testes--------------------------------------
 
@@ -434,27 +456,7 @@ arquivo.write(texto)
 arquivo.close()"""
 print("\n--------------------------Area de Testes-----------------------------")
 print("entrou")
-op = BinOperations()
-L = 3
-Gset = findG(L,L+1)
-numero = pow(2,L)-1
-print(numero)
-dicFatores = generateFatores(Gset[numero])
-filename = "Gmatrix_"+str(numero)+".txt"
-arquivo = open(filename,mode ='a')
-texto = "Matrix Geradora de 1 + D^" + str(numero)+"\n\n\n"
-for key in dicFatores:
-    
-    fator = dicFatores.get(key)
-    grauFator = op.grauPoli(fator)
-    if( grauFator <= (numero -ceil(numero/2) )):
-        G = op.generateG(fator,ceil(numero/2),numero)
-        texto += "\n--------------------------------------------\nMatriz G: \n"
-        for elem in G:
-            texto+= "   "+str(elem)+"\n"
-        texto+="\n DistMIN: "+str(op.distMin(G)) + "\n"
-arquivo.write(texto)
-arquivo.close()
+
     
 print("saiu")
 #------------------------------------------------------------------------------
