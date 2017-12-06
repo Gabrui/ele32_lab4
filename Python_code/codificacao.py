@@ -244,6 +244,43 @@ class BinOperations:
                     #para de propaga carry. acabou.
                     break
         return resposta
+    
+    def codificar(self,lista,g):
+        
+        #g deve vir como mais significativo a esquerda
+        
+        #prod eh o vetor que guarda o produto de g com lista
+        prod = self.generateArray(0,len(g)-1)
+        #flip flop guarda resultado parcial
+        ff = self.generateArray(0,len(g)-2)
+        #guarda a saida
+        saida =[]
+        
+        listaEntrada = lista + self.generateArray(0,len(g)-len(lista)-1)
+        
+        for entrada in listaEntrada:
+            
+            #anterior guarda o resultado anterior do ff
+            anterior = 0
+            #resultados das somas
+            resultado = 0
+            for i in range(len(g)):
+                #produto entre g e a entrada
+                prod[i] = g[i]*entrada
+                #soma com o anterior de ff
+                resultado = prod[i]^anterior
+                
+                
+                if(i < len(ff)):
+                    #pega o que ta armazenado no ff
+                    anterior = ff[i]
+                    #guarda o resultado no ff
+                    ff[i] = resultado
+            #o ultimo resultado guarda na saida
+            saida.append(resultado)
+                    
+        return saida
+                
 #---------------------------FIM DA CLASSE--------------------------------------
 
 class finderPrime:
@@ -412,7 +449,7 @@ def generateFatores(dictPrimo):
 #arquivo.close()
 #---------------Algoritmo de geracao da matrix G & Impressao-------------------
 op = BinOperations()
-L = 6
+"""L = 6
 Gset = findG(L,L+1)
 numero = pow(2,L)-1
 print(numero)
@@ -439,9 +476,20 @@ for key in dicFatores:
             distMinMax = distMin
 texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G: "+str(quantG)
 arquivo.write(texto)
-arquivo.close()
+arquivo.close()"""
 #------------------------------------------------------------------------------
+L = 4
+numero = pow(2,L)-1
+mensagem = op.generateArray(1,ceil(numero/2)-1)
+print("mensagem: ",mensagem)
+#g7 = [1, 0, 1, 1, 0, 0, 0]
+#g7inv = op.inverteArray(g7)
 
+g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+g15inv = op.inverteArray(g15)
+print("g7i",g15inv)
+mcoded = op.codificar(mensagem,g15inv)
+print("mensagem codificada: ",mcoded)
 #--------------------------Area de testes--------------------------------------
 
 """filename = "primos_grau.txt"
