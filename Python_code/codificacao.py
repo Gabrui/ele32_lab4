@@ -412,7 +412,7 @@ def generateFatores(dictPrimo):
 #arquivo.close()
 #---------------Algoritmo de geracao da matrix G & Impressao-------------------
 op = BinOperations()
-L = 5
+L = 6
 Gset = findG(L,L+1)
 numero = pow(2,L)-1
 print(numero)
