@@ -344,6 +344,17 @@ def findG(limInf,limSup):
                 break
     return Gset
 
+
+op = BinOperations()
+L = 7
+Gset = findG(L,L+1)
+numero = pow(2,L)-1
+filename = "fatores_"+str(numero)+".txt"
+arquivo = open(filename,mode ='a')
+texto = ""
+texto +="\n 1 + D^"+str(numero) +"\n Fatores: \n" +"   "
+arquivo.write(texto)
+
 def generateFatores(dictPrimo):
     
     op = BinOperations()
@@ -372,7 +383,8 @@ def generateFatores(dictPrimo):
         if(peso == len(combinacao)):
             continuar = False
         #coloca o fator no dicionario
-        dictFatores[quantFatores] = fator
+        #dictFatores[quantFatores] = fator
+        arquivo.write("\n"+" "+str(quantFatores)+" - "+str(op.simplificaArray(fator)))
         #atualiza a contagem
         quantFatores+=1
         #proxima combinacao de primos
@@ -380,18 +392,11 @@ def generateFatores(dictPrimo):
     return dictFatores
     
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
-op = BinOperations()
-L = 7
-Gset = findG(L,L+1)
-numero = pow(2,L)-1
+
 dicFatores = generateFatores(Gset[numero])
-filename = "fatores_"+str(numero)+".txt"
-arquivo = open(filename,mode ='a')
-texto = ""
-texto +="\n 1 + D^"+str(numero) +"\n Fatores: \n" +"   " 
-for index in dicFatores:
-    texto +="\n" +str(op.simplificaArray(dicFatores[index]))
-arquivo.write(texto)
+#for index in dicFatores:
+#    texto +="\n" +str(op.simplificaArray(dicFatores[index]))
+#arquivo.write(texto)
 arquivo.close()
 
 
