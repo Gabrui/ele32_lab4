@@ -8,7 +8,9 @@ Created on Wed Nov 22 15:20:33 2017
 from copy import deepcopy
 from math import sqrt
 from math import ceil
+from math import floor
 from numpy import random
+
 
 class BinOperations:
     
@@ -342,6 +344,43 @@ class finderPrime:
 #----------------------------FIM DO METODO DE PROCURA--------------------------
 #----------------------------FIM DA CLASSE FINDER------------------------------        
 
+class decoder:
+    
+    def __init__(self,g,n,dmin):
+        
+        #polinomio gerador a esquerda mais significativo
+        self.g = g
+        #tamanho da palavra codigo.
+        self.n = n
+        #dmin
+        self.dmin = dmin
+        #erros corrigiveis
+        self.qe = floor((dmin-1)/2)
+        #gerar o conjunto de sindromes
+        self.generateSindrome()
+        #operador binario
+        self.op = BinOperations()
+        
+    def generateSindrome(self):
+        
+        self.sindrome = {}
+        
+        inicio = pow(2,self.n-1)
+        fim = 0
+        for index in range(self.qe):
+            fim += pow(2,self.n-1-index)
+        fim +=1 
+        pos = 0
+        for index in range(inicio,fim):
+            
+            erro = op.generateArray(index,self.n-1)
+            peso = op.pesoHamming(erro)
+            if( peso <= self.qe ):
+                tupla = op.div(erro,self.g)
+                self.sindrome[pos] = tupla[1]
+                pos+=1
+            
+
 def findG(limInf,limSup):
     finder = finderPrime()
     operacao = BinOperations()
@@ -496,19 +535,20 @@ mensagem = op.generateArray(1,ceil(numero/2)-1)
 print("mensagem: ",mensagem)
 g7 = [1, 0, 1, 1, 0, 0, 0]
 g7inv = op.inverteArray(g7)
-print("\ng7i",g7inv)
+print("\ng7inv",g7inv)
 mcoded = op.codificar(mensagem,g7inv)
 
 #g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 #g15inv = op.inverteArray(g15)
 #print("\ng7i",g15inv)
 #mcoded = op.codificar(mensagem,g15inv)
+decodica =  decoder(op.simplificaArray(g7inv),numero,4)
 print("\nmensagem codificada: ",mcoded)
-
+"""
 p = 0.5
 r = CanalBSC(mcoded,p)
 print("\nr",r)
-
+"""
 #--------------------------Area de testes--------------------------------------
 
 """filename = "primos_grau.txt"
