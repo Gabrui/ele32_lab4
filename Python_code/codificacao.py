@@ -8,6 +8,8 @@ Created on Wed Nov 22 15:20:33 2017
 from copy import deepcopy
 from math import sqrt
 from math import ceil
+from numpy import random
+
 class BinOperations:
     
     def generateArray(self,number,grau):
@@ -439,7 +441,17 @@ def generateFatores(dictPrimo):
         combinacao = op.inc(combinacao)
     return dictFatores
  
+def CanalBSC(vetorEntrada, p):
+
     
+   quantMuda = random.binomial(len(vetorEntrada),p)
+   
+   posicao = random.choice(len(vetorEntrada),quantMuda,replace = False)
+   vetorSaida = deepcopy(vetorEntrada)
+   for pos in posicao:
+       vetorSaida[pos] ^= True
+
+   return vetorSaida,quantMuda   
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
 
@@ -478,18 +490,25 @@ texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G:
 arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
-L = 4
+L = 3
 numero = pow(2,L)-1
 mensagem = op.generateArray(1,ceil(numero/2)-1)
 print("mensagem: ",mensagem)
-#g7 = [1, 0, 1, 1, 0, 0, 0]
-#g7inv = op.inverteArray(g7)
+g7 = [1, 0, 1, 1, 0, 0, 0]
+g7inv = op.inverteArray(g7)
+print("\ng7i",g7inv)
+mcoded = op.codificar(mensagem,g7inv)
 
-g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
-g15inv = op.inverteArray(g15)
-print("g7i",g15inv)
-mcoded = op.codificar(mensagem,g15inv)
-print("mensagem codificada: ",mcoded)
+#g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+#g15inv = op.inverteArray(g15)
+#print("\ng7i",g15inv)
+#mcoded = op.codificar(mensagem,g15inv)
+print("\nmensagem codificada: ",mcoded)
+
+p = 0.5
+r = CanalBSC(mcoded,p)
+print("\nr",r)
+
 #--------------------------Area de testes--------------------------------------
 
 """filename = "primos_grau.txt"
