@@ -7,7 +7,7 @@ Created on Wed Nov 22 15:20:33 2017
 
 from copy import deepcopy
 from math import sqrt
-
+from math import ceil
 class BinOperations:
     
     def generateArray(self,number,grau):
@@ -156,33 +156,44 @@ class BinOperations:
             
         return simplificado
     
-    def generateG(self,lista,taxa):
+    def inverteArray(self,listaSimplificada):
+        
+        
+        invertido = self.generateArray(0,len(listaSimplificada)-1)
+        for index in range(len(listaSimplificada)):
+            
+            invertido[len(listaSimplificada)-index-1] = listaSimplificada[index]
+        
+        return invertido
+    
+    def generateG(self,lista,linhas, colunas):
         #retorna uma matrix G de geracao de codificacao
+        #G é linhas x colunas.
         
-        
+
         #retira zeros à esquerda do grau
-        gs = self.simplificaArray(lista)
-        # colunas = (grau+1)/(1-taxa)
-        # linhas = colunas * taxa
-        tamanhoLinha = int(len(gs)/(1-taxa))
-        linha = deepcopy(gs)
+        listaSimplificada = self.simplificaArray(lista)
+        listaInvs = self.inverteArray(listaSimplificada)
         
-        diferenca = tamanhoLinha-len(gs)
-        for index in range(diferenca):
-            #preenche com zeros a esquerda
-            linha.append(0)
+        grauls = self.grauPoli(listaSimplificada)
+        
+        
+        graugs = colunas - linhas
+        if(grauls < graugs):
+            gs = listaInvs + self.generateArray(0,graugs - grauls)
+        else:
+            gs = listaInvs
+        linha = gs + self.generateArray(0,colunas-2-graugs)
         
         #inicializa matrix geradora
         G=[]
-        #linhas
-        k = int(tamanhoLinha*taxa)
-        
-        for index in range(k):
+        for index in range(linhas):
             
             G.append(deepcopy(linha))
             linha[index] = 0
-            for i in range(len(gs)):
-                linha[index+1+i] = gs[i]
+            if(index < linhas-1):
+                for i in range(len(gs)):
+                    linha[index+1+i] = gs[i]
         return G
   
     def pesoHamming(self,lista):
@@ -345,15 +356,15 @@ def findG(limInf,limSup):
     return Gset
 
 
-op = BinOperations()
-L = 7
+"""op = BinOperations()
+L = 3
 Gset = findG(L,L+1)
 numero = pow(2,L)-1
 filename = "fatores_"+str(numero)+".txt"
 arquivo = open(filename,mode ='a')
 texto = ""
 texto +="\n 1 + D^"+str(numero) +"\n Fatores: \n" +"   "
-arquivo.write(texto)
+arquivo.write(texto)"""
 
 def generateFatores(dictPrimo):
     
@@ -383,21 +394,22 @@ def generateFatores(dictPrimo):
         if(peso == len(combinacao)):
             continuar = False
         #coloca o fator no dicionario
-        #dictFatores[quantFatores] = fator
-        arquivo.write("\n"+" "+str(quantFatores)+" - "+str(op.simplificaArray(fator)))
+        dictFatores[quantFatores] = fator
+        #arquivo.write("\n"+" "+str(quantFatores)+" - "+str(op.simplificaArray(fator)))
         #atualiza a contagem
         quantFatores+=1
         #proxima combinacao de primos
         combinacao = op.inc(combinacao)
     return dictFatores
+ 
     
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
-dicFatores = generateFatores(Gset[numero])
+
 #for index in dicFatores:
 #    texto +="\n" +str(op.simplificaArray(dicFatores[index]))
 #arquivo.write(texto)
-arquivo.close()
+#arquivo.close()
 
 
 #--------------------------Area de testes--------------------------------------
@@ -421,35 +433,30 @@ for index in Gset:
 arquivo.write(texto)
 arquivo.close()"""
 print("\n--------------------------Area de Testes-----------------------------")
-#Gs = findG(3,4)
-#U = op.generateArray(pow(2,7)+1,7)
-#a = op.generateArray(pow(2,7)+1,7)
-#b = op.generateArray(pow(2,255)+1,255)
-#b = op.generateArray(9,15)
-#a = op.generateArray(505,8)
 print("entrou")
-#res = op.div(b,a)
-#d = res
-#c = res[0]
-#res = op.div(c,a)
-#for contar in range(17): 
-#    res = op.multi(a,res)
+op = BinOperations()
+L = 3
+Gset = findG(L,L+1)
+numero = pow(2,L)-1
+print(numero)
+dicFatores = generateFatores(Gset[numero])
+filename = "Gmatrix_"+str(numero)+".txt"
+arquivo = open(filename,mode ='a')
+texto = "Matrix Geradora de 1 + D^" + str(numero)+"\n\n\n"
+for key in dicFatores:
+    
+    fator = dicFatores.get(key)
+    grauFator = op.grauPoli(fator)
+    if( grauFator <= (numero -ceil(numero/2) )):
+        G = op.generateG(fator,ceil(numero/2),numero)
+        texto += "\n--------------------------------------------\nMatriz G: \n"
+        for elem in G:
+            texto+= "   "+str(elem)+"\n"
+        texto+="\n DistMIN: "+str(op.distMin(G)) + "\n"
+arquivo.write(texto)
+arquivo.close()
+    
 print("saiu")
-#print(a," ** ",17," = ",res)
-#print("\n Fatores de ",U," igual a |=> ",Gs)
-#print(a)
-#print(b)
-#print("b / a == ",d)
-#print(op.VerificarPoliNulo(d[1]))
-#print(a)
-#print(c)
-#print("c / a == ",res)
-#dictPrimos = findG(8,9)
-#print(dictPrimos)
-#primos = dictPrimos.get(255)
-#fatores = generateFatores(primos)
-#print("\n\n\n",fatores)
-#print("distancia minima: ",op.distMin(matrixG))
 #------------------------------------------------------------------------------
 
 """
