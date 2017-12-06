@@ -412,7 +412,7 @@ def generateFatores(dictPrimo):
 #arquivo.close()
 #---------------Algoritmo de geracao da matrix G & Impressao-------------------
 op = BinOperations()
-L = 4
+L = 5
 Gset = findG(L,L+1)
 numero = pow(2,L)-1
 print(numero)
@@ -420,16 +420,24 @@ dicFatores = generateFatores(Gset[numero])
 filename = "Gmatrix_"+str(numero)+".txt"
 arquivo = open(filename,mode ='a')
 texto = "Matrix Geradora de 1 + D^" + str(numero)+"\n\n\n"
+distMinMax = -1
+distMin = 0
+quantG=0
 for key in dicFatores:
     
     fator = dicFatores.get(key)
     grauFator = op.grauPoli(fator)
     if( grauFator <= (numero -ceil(numero/2) )):
+        quantG+=1
         G = op.generateG(fator,ceil(numero/2),numero)
         texto += "\n--------------------------------------------\nMatriz G: \n"
         for elem in G:
             texto+= "   "+str(elem)+"\n"
-        texto+="\n DistMIN: "+str(op.distMin(G)) + "\n"
+        distMin = op.distMin(G)
+        texto+="\n DistMIN: "+str(distMin) + "\n"
+        if(distMin > distMinMax):
+            distMinMax = distMin
+texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G: "+str(quantG)
 arquivo.write(texto)
 arquivo.close()
 #------------------------------------------------------------------------------
