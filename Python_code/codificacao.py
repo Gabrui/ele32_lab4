@@ -10,7 +10,7 @@ from math import sqrt
 from math import ceil
 from math import floor
 from numpy import random
-
+import time
 
 class BinOperations:
     
@@ -74,6 +74,7 @@ class BinOperations:
         grauDividendo = self.grauPoli(dividendo)
         grauDivisor = self.grauPoli(divisor)
         if(grauDividendo < grauDivisor):
+            
             return 0,dividendo
         
         quociente = self.generateArray(0,len(dividendo)-1) #cria um poli nulo
@@ -346,12 +347,14 @@ class finderPrime:
 
 class decoder:
     
-    def __init__(self,g,n,dmin):
+    def __init__(self,g,n,k,dmin):
         
         #polinomio gerador a esquerda mais significativo
         self.g = g
         #tamanho da palavra codigo.
         self.n = n
+        #tamanho da sequencia de informacao
+        self.k=k
         #dmin
         self.dmin = dmin
         #erros corrigiveis
@@ -360,6 +363,7 @@ class decoder:
         self.generateSindrome()
         #operador binario
         self.op = BinOperations()
+        
         
     def generateSindrome(self):
         
@@ -376,11 +380,102 @@ class decoder:
             erro = op.generateArray(index,self.n-1)
             peso = op.pesoHamming(erro)
             if( peso <= self.qe ):
-                tupla = op.div(erro,self.g)
-                self.sindrome[pos] = tupla[1]
+                print(self.g)
+                (quociente,resto) = op.div(erro,self.g)
+                resto.reverse()
+                sind = resto[0:self.n-self.k]
+                sind.reverse()
+                self.sindrome[pos] = sind
                 pos+=1
+                
+                
+    def calcSindrome(self,recebido):
+        
+        #invertida = self.op.inverteArray(recebido)
+        (quociente,resto) = self.op.div(recebido,self.g) 
+        resto.reverse()
+        sind = resto[0:self.n - self.k]
+        sind.reverse()
+        return sind
+    
+    def rotateDn(self,recebido):
+        
+        r = deepcopy(recebido)
+        
+        for index in range(len(recebido)):
             
+            if(index < len(recebido)-1):
+                r[index] = recebido[index+1]
+            else:
+                r[index] = recebido[0]
+        return r
+    
+    def rotateSindrome(self,sindrome):
+        
+        sind = deepcopy(sindrome)
+        ult = self.g[0]*sindrome[0]
+        
+        for index in range(len(sindrome)):
+            
+            if(index < len(sindrome)-1):
+                sind[index] = sindrome[index+1]^(self.g[index+1]*ult)
+            else:
+                
+                sind[index] = self.g[index+1]*ult
+                
+        return sind
+    
+    def rotateRight(self,r,rotate):
+        
+        rodado = deepcopy(r)
+        for i in range(rotate):
+            rodar = deepcopy(rodado)
+            for index in reversed(range(len(r))):
+            
+                if(index > 0):
+                    rodado[index] = rodar[index-1]
+                else:
+                    rodado[index] = rodar[len(r)-1]
 
+        return rodado
+    
+    def decodifica(self,recebida):
+        
+        r = self.op.inverteArray(recebida)
+        nRotation = 0
+        #identifica a sindrome
+        sind = self.calcSindrome(r)
+        while(True):
+            #Se sindrome igual a zero
+            if(self.op.VerificarPoliNulo(sind)):
+                #desgira r
+                r = self.rotateRight(r,nRotation)
+                if(self.op.VerificarPoliNulo(r)):
+                    menssage = r
+                else:
+                    #mensagem é o quociente de r/g
+                    (menssage,zero) = self.op.div(r,self.g)
+                    
+                menssage.reverse()
+                mensagem = menssage[0:self.k]
+                mensagem.reverse()
+                
+                return mensagem
+            #verificar se eh uma sindrome do conjunto
+            if(sind in self.sindrome.values()):
+                
+                #troca o valor do bit de maior grau
+                r[0] ^= 1
+                #identifica a sindrome
+                sind = self.calcSindrome(r)
+                
+            else:
+                #se nao rotaciona a mensagem e a sindrome
+                r = self.rotateDn(r)
+                sind = self.rotateSindrome(sind)
+                nRotation += 1
+    
+    
 def findG(limInf,limSup):
     finder = finderPrime()
     operacao = BinOperations()
@@ -530,20 +625,29 @@ arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
 L = 3
+#tamanho da palavra codigo
 numero = pow(2,L)-1
-mensagem = op.generateArray(1,ceil(numero/2)-1)
+k = ceil(numero/2)
+mensagem = op.generateArray(7,k-1)
 print("mensagem: ",mensagem)
 g7 = [1, 0, 1, 1, 0, 0, 0]
 g7inv = op.inverteArray(g7)
 print("\ng7inv",g7inv)
 mcoded = op.codificar(mensagem,g7inv)
-
 #g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 #g15inv = op.inverteArray(g15)
 #print("\ng7i",g15inv)
 #mcoded = op.codificar(mensagem,g15inv)
-decodica =  decoder(op.simplificaArray(g7inv),numero,4)
+decodificador =  decoder(op.simplificaArray(g7inv),numero,k,4)
 print("\nmensagem codificada: ",mcoded)
+
+r = op.generateArray(8+64,6)
+
+print(op.inverteArray(r))
+
+mensagem = decodificador.decodifica(r)
+
+print("\n mensagem decodificada: ",mensagem)
 """
 p = 0.5
 r = CanalBSC(mcoded,p)
