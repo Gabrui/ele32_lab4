@@ -380,7 +380,6 @@ class decoder:
             erro = op.generateArray(index,self.n-1)
             peso = op.pesoHamming(erro)
             if( peso <= self.qe ):
-                print(self.g)
                 (quociente,resto) = op.div(erro,self.g)
                 resto.reverse()
                 sind = resto[0:self.n-self.k]
@@ -604,7 +603,7 @@ def PassarCodificador(dic,codificador, pgerador):
         
         #Passa a mensagem para o codificador e o polinomio gerador
         #codifica e guarda no dicionario a mensagem codificada.
-        mcodedInvertida = codificador.codificar(dic.get(key),pgerador)
+        mcodedInvertida = codificador.codificar(codificador.inverteArray(dic.get(key)),pgerador)
         dic[key] = codificador.inverteArray(mcodedInvertida)
     return dic
 
@@ -672,30 +671,32 @@ arquivo.close()"""
 
 
 #-------------------------------Area de testes------------------------------------
-"""L = 3
+L = 3
 #tamanho da palavra codigo
 numero = pow(2,L)-1
 k = ceil(numero/2)
-mensagem = op.generateArray(7,k-1)
+mensagem = op.generateArray(1,k-1)
 print("mensagem: ",mensagem)
 g7 = [1, 0, 1, 1, 0, 0, 0]
 g7inv = op.inverteArray(g7)
-print("\ng7inv",g7inv)
-mcoded = op.codificar(mensagem,g7inv)
+#print("\ng7inv",g7inv)
+mcoded = op.codificar(op.inverteArray(mensagem),g7inv)
+print("\n mcoded:",mcoded)
+print("mcodedinvertida:",op.inverteArray(mcoded))
 #g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 #g15inv = op.inverteArray(g15)
 #print("\ng7i",g15inv)
 #mcoded = op.codificar(mensagem,g15inv)
 decodificador =  decoder(op.simplificaArray(g7inv),numero,k,4)
-print("\nmensagem codificada: ",mcoded)
+#print("\nmensagem codificada: ",mcoded)
 
-r = op.generateArray(8+64,6)
+#r = op.generateArray(8+64,6)
 
-print(op.inverteArray(r))
+print(op.inverteArray(mcoded))
 
-mensagem = decodificador.decodifica(r)
+mensagem = decodificador.decodifica(mcoded)
 
-print("\n mensagem decodificada: ",mensagem)"""
+print("\n mensagem decodificada: ",mensagem)
 """
 p = 0.5
 r = CanalBSC(mcoded,p)
