@@ -604,7 +604,8 @@ def PassarCodificador(dic,codificador, pgerador):
         
         #Passa a mensagem para o codificador e o polinomio gerador
         #codifica e guarda no dicionario a mensagem codificada.
-        dic[key] = codificador.codificar(dic.get(key),pgerador)
+        mcodedInvertida = codificador.codificar(dic.get(key),pgerador)
+        dic[key] = codificador.inverteArray(mcodedInvertida)
     return dic
 
 def PassarCanalBSC(dic,p):
@@ -617,6 +618,14 @@ def PassarCanalBSC(dic,p):
         total+=quantMuda
     
     return dic,total
+
+def PassarDecodificador(dic,decodificador):
+    
+    for key in dic:
+        
+        dic[key] = decodificador.decodifica(dic.get(key))
+        
+    return dic
 
 
 
