@@ -597,8 +597,10 @@ def RandomNumberGenerator(quantVetores,tamanhoVetor):
         dic[i] = array.tolist() #transforma para lista e coloca no dicionario
     return dic
 
-def PassarCodificador(dic,codificador, pgerador):
+def PassarCodificador(palavras,codificador, pgerador):
     
+    
+    dic = deepcopy(palavras)
     for key in dic:
         
         #Passa a mensagem para o codificador e o polinomio gerador
@@ -607,8 +609,9 @@ def PassarCodificador(dic,codificador, pgerador):
         dic[key] = codificador.inverteArray(mcodedInvertida)
     return dic
 
-def PassarCanalBSC(dic,p):
+def PassarCanalBSC(palavras,p):
     
+    dic = deepcopy(palavras)
     quantMuda =0
     total = 0
     for key in dic:
@@ -618,15 +621,35 @@ def PassarCanalBSC(dic,p):
     
     return dic,total
 
-def PassarDecodificador(dic,decodificador):
+def PassarDecodificador(palavras,decodificador):
     
+    
+    dic = deepcopy(palavras)
     for key in dic:
         
         dic[key] = decodificador.decodifica(dic.get(key))
         
     return dic
 
-#Escrever funcao que recebe dois dicionario e ve se sao iguais
+def pe(dicM,dicdeco):
+    
+    quantErro=0
+    for key in dicM:
+        
+        #mensagem original
+        moriginal = dicM.get(key)
+        #mensagem recebida
+        mrecebida =  dicdeco.get(key)
+        #compara as mensagens
+        if(moriginal!= mrecebida):
+            #conta os erros
+            for index in range(len(moriginal)):
+                
+                if(moriginal[index] != mrecebida[index]):
+                    
+                    quantErro+=1
+    
+    return quantErro
 
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
@@ -667,18 +690,59 @@ arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
 
-
-
-
-#-------------------------------Area de testes------------------------------------
+p = 0
 L = 3
+n = pow(2,L)-1
+k =  ceil(n/2)
+
+
+#constantes do 1+D7
+dmin = 4
+l7 = [1, 0, 1, 1, 0, 0, 0]
+g7 = op.inverteArray(l7)
+g = g7
+#------------------------------Fim das constantes do D7------------------------
+
+#Quantidade de bits a serem enviados
+quantBits = 1033049115
+#quantidade de mensagens
+quantMensagens = int(quantBits/n)
+
+#instanciando codificador
+codificador = BinOperations()
+#instanciando decodificador
+decodificador = decoder(g,n,k,dmin)
+
+#-------------------Iniciando algoritmo de coleta de dados---------------------
+#gerar mensagens aleatorias
+dicMensagens = RandomNumberGenerator(quantMensagens,n)
+#codificar
+dicCodificada = PassarCodificador(dicMensagens,codificador,g)
+#transmissao
+(dicRecebido, erroIntro )= PassarCanalBSC(dicCodificada,p)
+#decodificacao
+dicMensagensRecebidas = PassarDecodificador(dicRecebido,decodificador)
+#contagem de erros
+quantErros = pe(dicMensagens,dicMensagensRecebidas)
+#calculo da probailidade de erro
+Pe = quantErros / quantBits
+#---------------------------Fim da coleta de dados-----------------------------
+#---------------------------Impressao dos dados--------------------------------
+print("\n--------DADOS--------\n")
+print("\n\nProbabilidade de erro do CANAL BSC (p): ",p)
+print("\n\n polinomio gerador: ",g)
+print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
+print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
+#--------------------------Fim da area de impressao dos dados------------------
+#-------------------------------Area de testes------------------------------------
+"""L = 3
 #tamanho da palavra codigo
 numero = pow(2,L)-1
 k = ceil(numero/2)
 mensagem = op.generateArray(1,k-1)
 print("mensagem: ",mensagem)
 g7 = [1, 0, 1, 1, 0, 0, 0]
-g7inv = op.inverteArray(g7)
+
 #print("\ng7inv",g7inv)
 mcoded = op.codificar(op.inverteArray(mensagem),g7inv)
 print("\n mcoded:",mcoded)
@@ -696,7 +760,7 @@ print(op.inverteArray(mcoded))
 
 mensagem = decodificador.decodifica(mcoded)
 
-print("\n mensagem decodificada: ",mensagem)
+print("\n mensagem decodificada: ",mensagem)"""
 """
 p = 0.5
 r = CanalBSC(mcoded,p)
