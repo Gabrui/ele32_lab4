@@ -606,7 +606,20 @@ def PassarCodificador(dic,codificador, pgerador):
         #codifica e guarda no dicionario a mensagem codificada.
         dic[key] = codificador.codificar(dic.get(key),pgerador)
     return dic
+
+def PassarCanalBSC(dic,p):
     
+    quantMuda =0
+    total = 0
+    for key in dic:
+        
+        (dic[key],quantMuda) = CanalBSC(dic.get(key),p)
+        total+=quantMuda
+    
+    return dic,total
+
+
+
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
 
