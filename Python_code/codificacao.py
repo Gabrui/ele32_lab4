@@ -626,7 +626,7 @@ def PassarDecodificador(dic,decodificador):
         
     return dic
 
-
+#Escrever funcao que recebe dois dicionario e ve se sao iguais
 
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
