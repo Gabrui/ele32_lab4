@@ -586,6 +586,18 @@ def CanalBSC(vetorEntrada, p):
        vetorSaida[pos] ^= True
 
    return vetorSaida,quantMuda   
+
+def RandomNumberGenerator(quantVetores,tamanhoVetor):
+    
+    dic = {} #guarda array que tem 0 e 1
+    #comeca em zero e vai ate 10^6/4 -1
+    for i in range(quantVetores):
+         #recebe um array com elementos 0 ou 1, escolhido pseudoaleatoriamente
+         #De tamanho = tamanhoVetor
+        array = random.randint(0,2,tamanhoVetor)
+        dic[i] = array.tolist() #transforma para lista e coloca no dicionario
+    return dic
+
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
 
@@ -624,7 +636,12 @@ texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G:
 arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
-L = 3
+
+
+
+
+#-------------------------------Area de testes------------------------------------
+"""L = 3
 #tamanho da palavra codigo
 numero = pow(2,L)-1
 k = ceil(numero/2)
@@ -647,7 +664,7 @@ print(op.inverteArray(r))
 
 mensagem = decodificador.decodifica(r)
 
-print("\n mensagem decodificada: ",mensagem)
+print("\n mensagem decodificada: ",mensagem)"""
 """
 p = 0.5
 r = CanalBSC(mcoded,p)
