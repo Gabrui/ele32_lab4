@@ -598,6 +598,15 @@ def RandomNumberGenerator(quantVetores,tamanhoVetor):
         dic[i] = array.tolist() #transforma para lista e coloca no dicionario
     return dic
 
+def PassarCodificador(dic,codificador, pgerador):
+    
+    for key in dic:
+        
+        #Passa a mensagem para o codificador e o polinomio gerador
+        #codifica e guarda no dicionario a mensagem codificada.
+        dic[key] = codificador.codificar(dic.get(key),pgerador)
+    return dic
+    
 #Gset = findG(3,9) #L vai de 3 ate 9 [3,9[
 
 
