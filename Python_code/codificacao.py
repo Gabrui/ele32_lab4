@@ -454,8 +454,9 @@ class decoder:
                 else:
                     #mensagem é o quociente de r/g
                     (menssage,zero) = self.op.div(r,self.g)
+                    menssage.reverse()
                     
-                menssage.reverse()
+                
                 mensagem = menssage[0:self.k]
                 mensagem.reverse()
                 
@@ -605,8 +606,8 @@ def PassarCodificador(palavras,codificador, pgerador):
         
         #Passa a mensagem para o codificador e o polinomio gerador
         #codifica e guarda no dicionario a mensagem codificada.
-        mcodedInvertida = codificador.codificar(codificador.inverteArray(dic.get(key)),pgerador)
-        dic[key] = codificador.inverteArray(mcodedInvertida)
+         dic[key]= codificador.codificar(codificador.inverteArray(dic.get(key)),pgerador)
+        # mcodedInvertida= codificador.inverteArray(mcodedInvertida)
     return dic
 
 def PassarCanalBSC(palavras,p):
@@ -690,7 +691,7 @@ arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
 
-p = 0
+p = 0.0001
 L = 3
 n = pow(2,L)-1
 k =  ceil(n/2)
@@ -704,18 +705,18 @@ g = g7
 #------------------------------Fim das constantes do D7------------------------
 
 #Quantidade de bits a serem enviados
-quantBits = 1033049115
+quantBits = 1024000
 #quantidade de mensagens
-quantMensagens = int(quantBits/n)
+quantMensagens = int(quantBits/k)
 
 #instanciando codificador
 codificador = BinOperations()
 #instanciando decodificador
-decodificador = decoder(g,n,k,dmin)
+decodificador = decoder(op.simplificaArray(g),n,k,dmin)
 
 #-------------------Iniciando algoritmo de coleta de dados---------------------
 #gerar mensagens aleatorias
-dicMensagens = RandomNumberGenerator(quantMensagens,n)
+dicMensagens = RandomNumberGenerator(quantMensagens,k)
 #codificar
 dicCodificada = PassarCodificador(dicMensagens,codificador,g)
 #transmissao
@@ -733,6 +734,7 @@ print("\n\nProbabilidade de erro do CANAL BSC (p): ",p)
 print("\n\n polinomio gerador: ",g)
 print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
 print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
+
 #--------------------------Fim da area de impressao dos dados------------------
 #-------------------------------Area de testes------------------------------------
 """L = 3
@@ -742,7 +744,7 @@ k = ceil(numero/2)
 mensagem = op.generateArray(1,k-1)
 print("mensagem: ",mensagem)
 g7 = [1, 0, 1, 1, 0, 0, 0]
-
+g7inv = op.inverteArray(g7)
 #print("\ng7inv",g7inv)
 mcoded = op.codificar(op.inverteArray(mensagem),g7inv)
 print("\n mcoded:",mcoded)
@@ -754,11 +756,12 @@ print("mcodedinvertida:",op.inverteArray(mcoded))
 decodificador =  decoder(op.simplificaArray(g7inv),numero,k,4)
 #print("\nmensagem codificada: ",mcoded)
 
-#r = op.generateArray(8+64,6)
+#for i in range(pow(2,6)+pow(2,5)+pow(2,4)+pow(2,3)+4+2+1):
+r = op.generateArray(pow(2,6)+pow(2,5)+pow(2,4)+pow(2,3)+4+2+1,6)
 
-print(op.inverteArray(mcoded))
+print("\n recebido:",r)
 
-mensagem = decodificador.decodifica(mcoded)
+mensagem = decodificador.decodifica(r)
 
 print("\n mensagem decodificada: ",mensagem)"""
 """
