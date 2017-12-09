@@ -373,18 +373,28 @@ class decoder:
         fim = 0
         for index in range(self.qe):
             fim += pow(2,self.n-1-index)
+        
         fim +=1 
         pos = 0
+        
+        #print("\n inicio",inicio)
+       # print("\n fim:",fim)
         for index in range(inicio,fim):
             
             erro = op.generateArray(index,self.n-1)
             peso = op.pesoHamming(erro)
-            if( peso <= self.qe ):
+            
+            
+            if( peso <= self.qe):
+             #   print("\n qe:",self.qe)
+             #   print("\n erro",erro)
+                
                 (quociente,resto) = op.div(erro,self.g)
                 resto.reverse()
                 sind = resto[0:self.n-self.k]
                 sind.reverse()
                 self.sindrome[pos] = sind
+              #  print("\n sindrome:",sind)
                 pos+=1
                 
                 
@@ -444,7 +454,17 @@ class decoder:
         nRotation = 0
         #identifica a sindrome
         sind = self.calcSindrome(r)
+        
+        roriginal = deepcopy( r)
+
         while(True):
+            
+            #print("\n calculando ... ", r)
+            #print("\n sindrome:",sind)
+            #print("\n g       :",self.g)
+            #print("\n sindromes:",self.sindrome.values())
+            #time.sleep(1)
+            
             #Se sindrome igual a zero
             if(self.op.VerificarPoliNulo(sind)):
                 #desgira r
@@ -459,7 +479,6 @@ class decoder:
                 
                 mensagem = menssage[0:self.k]
                 mensagem.reverse()
-                
                 return mensagem
             #verificar se eh uma sindrome do conjunto
             if(sind in self.sindrome.values()):
@@ -468,12 +487,15 @@ class decoder:
                 r[0] ^= 1
                 #identifica a sindrome
                 sind = self.calcSindrome(r)
+
                 
             else:
                 #se nao rotaciona a mensagem e a sindrome
                 r = self.rotateDn(r)
                 sind = self.rotateSindrome(sind)
-                nRotation += 1
+            if(r == roriginal):
+                return r
+                
     
     
 def findG(limInf,limSup):
@@ -627,7 +649,6 @@ def PassarDecodificador(palavras,decodificador):
     
     dic = deepcopy(palavras)
     for key in dic:
-        
         dic[key] = decodificador.decodifica(dic.get(key))
         
     return dic
@@ -690,19 +711,27 @@ texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G:
 arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
+"""
 
-p = 0.0001
-L = 3
+L = 4
 n = pow(2,L)-1
-k =  ceil(n/2)
-
+#k =  ceil(n/2)
+"""
 
 #constantes do 1+D7
+"""
 dmin = 4
 l7 = [1, 0, 1, 1, 0, 0, 0]
 g7 = op.inverteArray(l7)
 g = g7
+"""
 #------------------------------Fim das constantes do D7------------------------
+"""
+#constantes do 1+D15
+dmin = 5
+g = op.generateArray(465,14)
+k = 7
+#------------------------------Fim das constantes do D15------------------------
 
 #Quantidade de bits a serem enviados
 quantBits = 1024000
@@ -712,58 +741,87 @@ quantMensagens = int(quantBits/k)
 #instanciando codificador
 codificador = BinOperations()
 #instanciando decodificador
+print("\n instanciando decodificador ...")
 decodificador = decoder(op.simplificaArray(g),n,k,dmin)
+print("\n *instanciado decodificador!*")
 
+listaP = [0.5,0.2,0.1]
+anterior = 1
+for i in range(5):
+    for elem in listaP:
+        if(anterior == 0.0):
+            break
+        p = elem*pow(0.1,i)
 #-------------------Iniciando algoritmo de coleta de dados---------------------
 #gerar mensagens aleatorias
-dicMensagens = RandomNumberGenerator(quantMensagens,k)
+        print("\n gerando mensagens...")
+        dicMensagens = RandomNumberGenerator(quantMensagens,k)
 #codificar
-dicCodificada = PassarCodificador(dicMensagens,codificador,g)
+        print("\n codificando ...")
+        dicCodificada = PassarCodificador(dicMensagens,codificador,g)
 #transmissao
-(dicRecebido, erroIntro )= PassarCanalBSC(dicCodificada,p)
+        print("\n enviando ...")
+        (dicRecebido, erroIntro )= PassarCanalBSC(dicCodificada,p)
 #decodificacao
-dicMensagensRecebidas = PassarDecodificador(dicRecebido,decodificador)
+        print("\n decodificando ...")
+        dicMensagensRecebidas = PassarDecodificador(dicRecebido,decodificador)
 #contagem de erros
-quantErros = pe(dicMensagens,dicMensagensRecebidas)
+        print("\n calculando erros ...")
+        quantErros = pe(dicMensagens,dicMensagensRecebidas)
 #calculo da probailidade de erro
-Pe = quantErros / quantBits
+        Pe = quantErros / quantBits
+        anterior = Pe
 #---------------------------Fim da coleta de dados-----------------------------
 #---------------------------Impressao dos dados--------------------------------
-print("\n--------DADOS--------\n")
-print("\n\nProbabilidade de erro do CANAL BSC (p): ",p)
-print("\n\n polinomio gerador: ",g)
-print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
-print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
-
+        print("\n--------DADOS--------\n")
+        print("\n\nProbabilidade de erro do CANAL BSC (p): ",p)
+        print("\n\n polinomio gerador: ",g)
+        print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
+        print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
+"""
 #--------------------------Fim da area de impressao dos dados------------------
 #-------------------------------Area de testes------------------------------------
-"""L = 3
+"""
+L = 4
 #tamanho da palavra codigo
 numero = pow(2,L)-1
-k = ceil(numero/2)
+#k = ceil(numero/2)
+k = 7
+dmin = 6
 mensagem = op.generateArray(1,k-1)
 print("mensagem: ",mensagem)
-g7 = [1, 0, 1, 1, 0, 0, 0]
-g7inv = op.inverteArray(g7)
+#g7 = [1, 0, 1, 1, 0, 0, 0]
+#g7inv = op.inverteArray(g7)
 #print("\ng7inv",g7inv)
-mcoded = op.codificar(op.inverteArray(mensagem),g7inv)
+#g15 = op.generateArray(465,14)
+g15 = [1, 1, 0, 1, 1, 1, 0, 1, 1]
+mcoded = op.codificar(op.inverteArray(mensagem),g15)
 print("\n mcoded:",mcoded)
 print("mcodedinvertida:",op.inverteArray(mcoded))
 #g15 = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 #g15inv = op.inverteArray(g15)
 #print("\ng7i",g15inv)
 #mcoded = op.codificar(mensagem,g15inv)
-decodificador =  decoder(op.simplificaArray(g7inv),numero,k,4)
-#print("\nmensagem codificada: ",mcoded)
+decodificador =  decoder(op.simplificaArray(g15),numero,k,dmin)
 
-#for i in range(pow(2,6)+pow(2,5)+pow(2,4)+pow(2,3)+4+2+1):
-r = op.generateArray(pow(2,6)+pow(2,5)+pow(2,4)+pow(2,3)+4+2+1,6)
+print("\nmensagem codificada: ",mcoded)
 
-print("\n recebido:",r)
-
+e = 0
+#for i in range(32767+1):
+    
+r = op.generateArray(24,14)
+   # if(op.pesoHamming(r) < 3):
 mensagem = decodificador.decodifica(r)
+      #  e +=1
+print("\n r: ",r)
+print("\n mensagem decodificada: ",mensagem)
+       # print("e:",e)
 
-print("\n mensagem decodificada: ",mensagem)"""
+"""
+#print("erros corrigiveis:",e)
+
+
+
 """
 p = 0.5
 r = CanalBSC(mcoded,p)
@@ -789,11 +847,20 @@ for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(dicwrite[index])
 arquivo.write(texto)
 arquivo.close()"""
+
 print("\n--------------------------Area de Testes-----------------------------")
 print("entrou")
-
-    
+L = 7
+n = pow(2,L)-1
+k =  ceil(n/2)
+#g = op.generateArray(465,15)
+#g15=[1, 1, 0, 1, 1, 1, 0, 1, 1]
+g127 = [1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+G = op.generateG(g127,k,n)
+print("\ndistMIn",op.distMin(G)) 
+print("\n peso hamming:",op.pesoHamming(g127))  
 print("saiu")
+
 #------------------------------------------------------------------------------
 
 """
