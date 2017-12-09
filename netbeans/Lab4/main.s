@@ -74,151 +74,155 @@ main:
 	.cfi_escape 0x10,0xd,0x2,0x76,0x68
 	.cfi_escape 0x10,0xc,0x2,0x76,0x60
 	pushq	%rbx
-	subq	$384, %rsp
+	subq	$416, %rsp
 	.cfi_escape 0x10,0x3,0x2,0x76,0x50
-	vmovaps	%xmm10, -384(%rbp)
+	vmovaps	%xmm6, -384(%rbp)
 	movq	%fs:40, %rax
 	movq	%rax, -56(%rbp)
 	xorl	%eax, %eax
 	leaq	-368(%rbp), %rax
 	movq	%rax, %rdi
 	movq	%rax, %rbx
-	movq	%rax, -400(%rbp)
+	movq	%rax, -440(%rbp)
 	call	memcpy@PLT
 	movl	$76, %edi
 	call	malloc@PLT
-	vmovdqa	-384(%rbp), %xmm10
-	movq	%rbx, %rdx
-	leaq	304(%rbx), %r8
-	movq	%rax, %rcx
-	movl	$63, %edi
+	vmovdqa	-384(%rbp), %xmm6
+	movl	$63, %esi
+	leaq	304(%rbx), %rdi
+	movq	%rax, %r12
+	movq	%rbx, %rax
+	movq	%r12, %rdx
 	.p2align 4,,10
 	.p2align 3
 .L2:
-	movl	%edi, %ebx
-	xorl	%esi, %esi
-	addq	$16, %rdx
-	lzcntq	-16(%rdx), %rsi
-	subl	%esi, %ebx
-	addq	$4, %rcx
-	movl	%ebx, -4(%rcx)
-	cmpq	%r8, %rdx
-	jne	.L2
-	movl	$1, %edx
+	movl	%esi, %ebx
 	xorl	%ecx, %ecx
+	addq	$16, %rax
+	lzcntq	-16(%rax), %rcx
+	subl	%ecx, %ebx
+	addq	$4, %rdx
+	movl	%ebx, -4(%rdx)
+	cmpq	%rdi, %rax
+	jne	.L2
+	movl	$1, %eax
+	xorl	%edx, %edx
 	.p2align 4,,10
 	.p2align 3
 .L3:
-	addl	-4(%rax,%rdx,4), %ecx
-	movl	%edx, %r13d
-	addq	$1, %rdx
-	cmpl	$62, %ecx
+	addl	-4(%r12,%rax,4), %edx
+	movl	%eax, %r15d
+	addq	$1, %rax
+	cmpl	$62, %edx
 	jle	.L3
-	leaq	72(%rax), %rcx
-	xorl	%edx, %edx
-	xorl	%r12d, %r12d
+	leaq	72(%r12), %rdx
+	xorl	%eax, %eax
+	xorl	%r14d, %r14d
 	.p2align 4,,10
 	.p2align 3
 .L4:
-	addl	(%rcx), %edx
-	addl	$1, %r12d
-	subq	$4, %rcx
-	cmpl	$62, %edx
+	addl	(%rdx), %eax
+	addl	$1, %r14d
+	subq	$4, %rdx
+	cmpl	$62, %eax
 	jle	.L4
-	movq	%rax, %r11
-	movl	$19, %edx
-	movl	$1, %r8d
-	movq	$0, -408(%rbp)
-	shrq	$2, %r11
-	movl	%edx, %ebx
-	vpxor	%xmm5, %xmm5, %xmm5
-	movl	$1, %r10d
-	negq	%r11
-	vmovdqa	.LC1(%rip), %ymm9
-	vpxor	%xmm6, %xmm6, %xmm6
-	movl	$0, -392(%rbp)
-	andl	$7, %r11d
-	vmovdqa	.LC2(%rip), %ymm8
-	vmovdqa	.LC3(%rip), %ymm7
-	subl	%r11d, %ebx
-	movl	%r11d, %edx
-	movl	%ebx, %esi
-	leaq	(%rax,%rdx,4), %r14
-	movl	%ebx, -388(%rbp)
+	movq	%r12, %rbx
+	movl	$19, %eax
 	movl	$1, %edx
-	shrl	$3, %esi
-	leaq	32(%r14), %r15
-	andl	$-8, %ebx
-	movl	%esi, -384(%rbp)
-	jmp	.L31
+	movl	$1, %r8d
+	shrq	$2, %rbx
+	vpxor	%xmm5, %xmm5, %xmm5
+	vpxor	%xmm7, %xmm7, %xmm7
+	movq	$0, -448(%rbp)
+	negq	%rbx
+	vmovdqa	.LC1(%rip), %ymm10
+	movl	$0, -428(%rbp)
+	andl	$7, %ebx
+	vmovdqa	.LC2(%rip), %ymm9
+	vmovdqa	.LC3(%rip), %ymm8
+	subl	%ebx, %eax
+	movl	%eax, %esi
+	movl	%eax, -404(%rbp)
+	shrl	$3, %eax
+	movl	%eax, -408(%rbp)
+	movl	%ebx, %eax
+	andl	$-8, %esi
+	leaq	(%r12,%rax,4), %rax
+	movl	%esi, %r13d
+	movq	%rax, -416(%rbp)
+	addq	$32, %rax
+	movq	%rax, -424(%rbp)
+	movl	$1, %eax
+	jmp	.L34
 	.p2align 4,,10
 	.p2align 3
 .L5:
 	addq	$1, %r8
-	cmpq	$524288, %r8
-	je	.L30
-.L110:
+	cmpq	$524289, %r8
+	je	.L33
+.L111:
 	xorl	%edx, %edx
 	popcntq	%r8, %rdx
-.L31:
-	cmpl	%edx, %r12d
+.L34:
+	cmpl	%edx, %r14d
 	jg	.L5
-	cmpl	%edx, %r13d
+	cmpl	%edx, %r15d
 	jl	.L5
-	testl	%r11d, %r11d
-	je	.L33
+	testl	%ebx, %ebx
+	je	.L36
 	xorl	%esi, %esi
 	testb	$1, %r8b
 	je	.L7
-	movl	(%rax), %esi
+	movl	(%r12), %esi
 .L7:
-	cmpl	$1, %r11d
-	je	.L35
+	cmpl	$1, %ebx
+	je	.L38
 	testb	$2, %r8b
 	je	.L9
-	addl	4(%rax), %esi
+	addl	4(%r12), %esi
 .L9:
-	cmpl	$2, %r11d
-	je	.L36
+	cmpl	$2, %ebx
+	je	.L39
 	testb	$4, %r8b
 	je	.L10
-	addl	8(%rax), %esi
+	addl	8(%r12), %esi
 .L10:
-	cmpl	$3, %r11d
-	je	.L37
+	cmpl	$3, %ebx
+	je	.L40
 	testb	$8, %r8b
 	je	.L11
-	addl	12(%rax), %esi
+	addl	12(%r12), %esi
 .L11:
-	cmpl	$4, %r11d
-	je	.L38
+	cmpl	$4, %ebx
+	je	.L41
 	testb	$16, %r8b
 	je	.L12
-	addl	16(%rax), %esi
+	addl	16(%r12), %esi
 .L12:
-	cmpl	$5, %r11d
-	je	.L39
+	cmpl	$5, %ebx
+	je	.L42
 	testb	$32, %r8b
 	je	.L13
-	addl	20(%rax), %esi
+	addl	20(%r12), %esi
 .L13:
-	cmpl	$6, %r11d
-	je	.L40
+	cmpl	$6, %ebx
+	je	.L43
 	testb	$64, %r8b
 	je	.L15
-	addl	24(%rax), %esi
+	addl	24(%r12), %esi
 .L15:
 	movl	$12, %ecx
 	movl	$7, %edx
 .L6:
 	vmovd	%edx, %xmm0
-	vmovq	%r8, %xmm4
-	cmpl	$1, -384(%rbp)
+	vmovq	%r8, %xmm3
+	movq	-416(%rbp), %rdi
+	cmpl	$1, -408(%rbp)
 	vpbroadcastd	%xmm0, %ymm0
-	vpbroadcastq	%xmm4, %ymm3
-	vpaddd	%ymm9, %ymm0, %ymm4
-	vpaddd	%ymm8, %ymm0, %ymm0
-	vpsllvd	%ymm0, %ymm7, %ymm0
+	vpbroadcastq	%xmm3, %ymm3
+	vpaddd	%ymm10, %ymm0, %ymm4
+	vpaddd	%ymm9, %ymm0, %ymm0
+	vpsllvd	%ymm0, %ymm8, %ymm0
 	vextracti128	$0x1, %ymm0, %xmm2
 	vpmovsxdq	%xmm0, %ymm1
 	vpmovsxdq	%xmm2, %ymm2
@@ -233,10 +237,11 @@ main:
 	vpshufd	$216, %ymm1, %ymm1
 	vpshufd	$216, %ymm0, %ymm0
 	vpunpcklqdq	%ymm1, %ymm0, %ymm0
-	vpmaskmovd	(%r14), %ymm0, %ymm1
+	vpmaskmovd	(%rdi), %ymm0, %ymm1
 	vpand	%ymm0, %ymm1, %ymm0
 	je	.L16
-	vpsllvd	%ymm4, %ymm7, %ymm4
+	vpsllvd	%ymm4, %ymm8, %ymm4
+	movq	-424(%rbp), %rdi
 	vpmovsxdq	%xmm4, %ymm2
 	vextracti128	$0x1, %ymm4, %xmm4
 	vpmovsxdq	%xmm4, %ymm4
@@ -251,90 +256,90 @@ main:
 	vpshufd	$216, %ymm2, %ymm2
 	vpshufd	$216, %ymm1, %ymm4
 	vpunpcklqdq	%ymm2, %ymm4, %ymm1
-	vpmaskmovd	(%r15), %ymm1, %ymm2
+	vpmaskmovd	(%rdi), %ymm1, %ymm2
 	vpand	%ymm1, %ymm2, %ymm1
 	vpaddd	%ymm1, %ymm0, %ymm0
 .L16:
-	vperm2i128	$33, %ymm6, %ymm0, %ymm1
-	addl	%ebx, %edx
-	subl	%ebx, %ecx
+	vperm2i128	$33, %ymm7, %ymm0, %ymm1
+	addl	%r13d, %edx
+	subl	%r13d, %ecx
 	vpaddd	%ymm1, %ymm0, %ymm0
-	vperm2i128	$33, %ymm6, %ymm0, %ymm1
+	vperm2i128	$33, %ymm7, %ymm0, %ymm1
 	vpalignr	$8, %ymm0, %ymm1, %ymm1
 	vpaddd	%ymm1, %ymm0, %ymm0
-	vperm2i128	$33, %ymm6, %ymm0, %ymm1
+	vperm2i128	$33, %ymm7, %ymm0, %ymm1
 	vpalignr	$4, %ymm0, %ymm1, %ymm1
 	vpaddd	%ymm1, %ymm0, %ymm0
 	vmovd	%xmm0, %edi
 	addl	%edi, %esi
-	cmpl	-388(%rbp), %ebx
+	cmpl	%r13d, -404(%rbp)
 	je	.L17
-	shlx	%edx, %r10d, %edi
+	shlx	%edx, %eax, %edi
 	movslq	%edi, %rdi
 	testq	%r8, %rdi
 	je	.L18
 	movslq	%edx, %rdi
-	addl	(%rax,%rdi,4), %esi
+	addl	(%r12,%rdi,4), %esi
 .L18:
 	leal	1(%rdx), %r9d
 	cmpl	$1, %ecx
 	je	.L17
-	shlx	%r9d, %r10d, %edi
+	shlx	%r9d, %eax, %edi
 	movslq	%edi, %rdi
 	testq	%r8, %rdi
 	je	.L19
 	movslq	%r9d, %r9
-	addl	(%rax,%r9,4), %esi
+	addl	(%r12,%r9,4), %esi
 .L19:
 	leal	2(%rdx), %r9d
 	cmpl	$2, %ecx
 	je	.L17
-	shlx	%r9d, %r10d, %edi
+	shlx	%r9d, %eax, %edi
 	movslq	%edi, %rdi
 	testq	%r8, %rdi
 	je	.L20
 	movslq	%r9d, %r9
-	addl	(%rax,%r9,4), %esi
+	addl	(%r12,%r9,4), %esi
 .L20:
 	leal	3(%rdx), %r9d
 	cmpl	$3, %ecx
 	je	.L17
-	shlx	%r9d, %r10d, %edi
+	shlx	%r9d, %eax, %edi
 	movslq	%edi, %rdi
 	testq	%r8, %rdi
 	je	.L21
 	movslq	%r9d, %r9
-	addl	(%rax,%r9,4), %esi
+	addl	(%r12,%r9,4), %esi
 .L21:
 	leal	4(%rdx), %r9d
 	cmpl	$4, %ecx
 	je	.L17
-	shlx	%r9d, %r10d, %edi
+	shlx	%r9d, %eax, %edi
 	movslq	%edi, %rdi
 	testq	%r8, %rdi
 	je	.L22
 	movslq	%r9d, %r9
-	addl	(%rax,%r9,4), %esi
+	addl	(%r12,%r9,4), %esi
 .L22:
 	leal	5(%rdx), %r9d
 	cmpl	$5, %ecx
 	je	.L17
-	shlx	%r9d, %r10d, %edi
+	shlx	%r9d, %eax, %edi
 	movslq	%edi, %rdi
 	testq	%r8, %rdi
 	je	.L23
 	movslq	%r9d, %r9
-	addl	(%rax,%r9,4), %esi
+	addl	(%r12,%r9,4), %esi
 .L23:
 	addl	$6, %edx
 	cmpl	$6, %ecx
 	je	.L17
-	shlx	%edx, %r10d, %ecx
+	shlx	%edx, %eax, %ecx
 	movslq	%ecx, %rcx
 	testq	%r8, %rcx
 	je	.L17
 	movslq	%edx, %rdx
-	addl	(%rax,%rdx,4), %esi
+	addl	(%r12,%rdx,4), %esi
 .L17:
 	cmpl	$63, %esi
 	jne	.L5
@@ -342,71 +347,118 @@ main:
 	tzcntq	%r8, %rcx
 	leal	1(%rcx), %edx
 	salq	$4, %rcx
-	vmovdqa	-368(%rbp,%rcx), %xmm1
-	cmpl	$19, %edx
-	je	.L26
-	movq	-400(%rbp), %rdi
+	vmovdqa	-368(%rbp,%rcx), %xmm3
+	vmovaps	%xmm3, -400(%rbp)
+	cmpl	$18, %edx
+	jg	.L26
+	movq	-440(%rbp), %rdi
 	leaq	16(%rdi,%rcx), %rdi
 	.p2align 4,,10
 	.p2align 3
 .L28:
-	shlx	%edx, %r10d, %ecx
+	shlx	%edx, %eax, %ecx
 	movslq	%ecx, %rcx
 	testq	%r8, %rcx
 	je	.L27
-	vpclmulqdq	$0, (%rdi), %xmm1, %xmm1
+	vmovdqa	-400(%rbp), %xmm3
+	vpclmulqdq	$0, (%rdi), %xmm3, %xmm3
+	vmovaps	%xmm3, -400(%rbp)
 .L27:
 	addl	$1, %edx
 	addq	$16, %rdi
 	cmpl	$19, %edx
 	jne	.L28
 .L26:
-	vmovq	%xmm1, %rdx
-	vpextrq	$1, %xmm1, %r9
+	movq	-400(%rbp), %rdx
+	movq	-392(%rbp), %r11
 	popcntq	%rdx, %rdx
-	popcntq	%r9, %r9
-	addl	%edx, %r9d
-	cmpl	-392(%rbp), %r9d
+	popcntq	%r11, %r11
+	addl	%edx, %r11d
+	cmpl	-428(%rbp), %r11d
 	jl	.L5
-	movl	$1, %edi
+	movq	-400(%rbp), %rdi
+	movq	-392(%rbp), %r9
+	movl	$63, %r10d
+	jmp	.L31
 	.p2align 4,,10
 	.p2align 3
 .L29:
-	movslq	%edi, %rcx
-	vmovq	%rcx, %xmm0
-	xorl	%ecx, %ecx
-	vpsllq	%xmm0, %xmm1, %xmm0
-	vpxor	%xmm1, %xmm0, %xmm0
+	movq	%r9, -376(%rbp)
+.L30:
+	addq	%rdi, %rdi
+	vmovdqa	-400(%rbp), %xmm4
+	movq	%rdi, -384(%rbp)
+	vpxor	-384(%rbp), %xmm4, %xmm0
 	vmovq	%xmm0, %rdx
-	popcntq	%rdx, %rcx
-	vpextrq	$1, %xmm0, %rdx
+	vpextrq	$1, %xmm0, %rcx
 	popcntq	%rdx, %rdx
+	popcntq	%rcx, %rcx
 	addl	%ecx, %edx
 	cmpl	%edx, %esi
 	cmovg	%edx, %esi
-	addl	$1, %edi
-	cmpl	$64, %edi
-	jne	.L29
-	cmpl	%esi, %r9d
-	cmovle	%r9d, %esi
-	cmpl	-392(%rbp), %esi
+	subl	$1, %r10d
+	je	.L110
+.L31:
+	addq	%r9, %r9
+	testq	%rdi, %rdi
+	jns	.L29
+	orq	$1, %r9
+	movq	%r9, -376(%rbp)
+	jmp	.L30
+	.p2align 4,,10
+	.p2align 3
+.L38:
+	movl	$18, %ecx
+	movl	$1, %edx
+	jmp	.L6
+	.p2align 4,,10
+	.p2align 3
+.L36:
+	movl	$19, %ecx
+	xorl	%edx, %edx
+	xorl	%esi, %esi
+	jmp	.L6
+	.p2align 4,,10
+	.p2align 3
+.L39:
+	movl	$17, %ecx
+	movl	$2, %edx
+	jmp	.L6
+	.p2align 4,,10
+	.p2align 3
+.L40:
+	movl	$16, %ecx
+	movl	$3, %edx
+	jmp	.L6
+	.p2align 4,,10
+	.p2align 3
+.L41:
+	movl	$15, %ecx
+	movl	$4, %edx
+	jmp	.L6
+	.p2align 4,,10
+	.p2align 3
+.L110:
+	cmpl	%r11d, %esi
+	cmovg	%r11d, %esi
+	cmpl	-428(%rbp), %esi
 	jle	.L5
-	movq	%r8, -408(%rbp)
+	movq	%r8, -448(%rbp)
 	addq	$1, %r8
-	vmovdqa	%xmm1, %xmm10
-	movl	%esi, -392(%rbp)
-	cmpq	$524288, %r8
-	jne	.L110
-.L30:
-	vmovq	%xmm10, %rcx
-	vpextrq	$1, %xmm10, %rdx
+	vmovdqa	%xmm4, %xmm6
+	movl	%esi, -428(%rbp)
+	cmpq	$524289, %r8
+	jne	.L111
+.L33:
+	vmovq	%xmm6, %rcx
+	vpextrq	$1, %xmm6, %rdx
 	leaq	.LC4(%rip), %rsi
 	xorl	%eax, %eax
 	movl	$1, %edi
 	vzeroupper
 	call	__printf_chk@PLT
-	movl	-392(%rbp), %edx
-	movq	-408(%rbp), %rcx
+	movl	-428(%rbp), %edx
+	movq	-448(%rbp), %rcx
 	xorl	%eax, %eax
 	leaq	.LC5(%rip), %rsi
 	movl	$1, %edi
@@ -414,8 +466,8 @@ main:
 	xorl	%eax, %eax
 	movq	-56(%rbp), %rbx
 	xorq	%fs:40, %rbx
-	jne	.L111
-	addq	$384, %rsp
+	jne	.L112
+	addq	$416, %rsp
 	popq	%rbx
 	popq	%r10
 	.cfi_remember_state
@@ -430,49 +482,18 @@ main:
 	ret
 	.p2align 4,,10
 	.p2align 3
-.L35:
+.L42:
 	.cfi_restore_state
-	movl	$18, %ecx
-	movl	$1, %edx
-	jmp	.L6
-	.p2align 4,,10
-	.p2align 3
-.L33:
-	movl	$19, %ecx
-	xorl	%edx, %edx
-	xorl	%esi, %esi
-	jmp	.L6
-	.p2align 4,,10
-	.p2align 3
-.L36:
-	movl	$17, %ecx
-	movl	$2, %edx
-	jmp	.L6
-	.p2align 4,,10
-	.p2align 3
-.L37:
-	movl	$16, %ecx
-	movl	$3, %edx
-	jmp	.L6
-	.p2align 4,,10
-	.p2align 3
-.L38:
-	movl	$15, %ecx
-	movl	$4, %edx
-	jmp	.L6
-	.p2align 4,,10
-	.p2align 3
-.L39:
 	movl	$14, %ecx
 	movl	$5, %edx
 	jmp	.L6
 	.p2align 4,,10
 	.p2align 3
-.L40:
+.L43:
 	movl	$13, %ecx
 	movl	$6, %edx
 	jmp	.L6
-.L111:
+.L112:
 	call	__stack_chk_fail@PLT
 	.cfi_endproc
 .LFE4796:

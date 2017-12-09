@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     __m128i maior;
     
     // Percorro todas as combinações
-    for (unsigned long long pos = 1; pos < quantComb; pos++) {
+    for (unsigned long long pos = 1; pos <= quantComb; pos++) {
         // Verificação preliminar do grau do polinomio
         int grau = _mm_popcnt_u64(pos);
         if (grau < quantMin || grau > quantMax)
@@ -87,10 +87,15 @@ int main(int argc, char** argv) {
             int peso = popcnt128(mult);
             if (peso >= maiorDist) {
                 int dist = grauEsperado;
+                alignas(16) unsigned long long v[2];
+                _mm_store_si128((__m128i*)v, mult);
                 // Efetua o cálculo das distâncias mínimas
                 for (int i=1; i<=grauEsperado; i++) {
-                    __m128i deslocado = mult<<i;
-                    int d = popcnt128(_mm_xor_si128(mult, deslocado));
+                    v[1]<<=1;
+                    if (v[0] & ((unsigned long long) 1 << 63) ) 
+                        v[1] |= 1;
+                    v[0]<<=1;
+                    int d = popcnt128(_mm_xor_si128(mult, *((__m128i*)v) ));
                     if (d < dist)
                         dist = d;
                 }
@@ -128,6 +133,5 @@ int main(int argc, char** argv) {
     
     p128_hex_u64(maior);
     printf("Distância Mínima %d, Posição %llu", maiorDist, maiorPos);
-    
     return 0;
 }
