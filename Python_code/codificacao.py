@@ -11,6 +11,7 @@ from math import ceil
 from math import floor
 from numpy import random
 import time
+from itertool import combinations
 
 class BinOperations:
     
@@ -368,7 +369,7 @@ class decoder:
     def generateSindrome(self):
         
         self.sindrome = {}
-        
+        """ 
         inicio = pow(2,self.n-1)
         fim = 0
         for index in range(self.qe):
@@ -395,8 +396,21 @@ class decoder:
                 sind.reverse()
                 self.sindrome[pos] = sind
               #  print("\n sindrome:",sind)
-                pos+=1
+                pos+=1"""
+        pos = 0
+        for index in range(self.qe):
+            
+            #gera as permutacoes
+            for x in combinations( range(self.n-1), index ) :
+                lista = [ 1 if i in x else 0 for i in range(self.n-1) ] 
                 
+                erro = [1]+lista
+                (quociente,resto) = op.div(erro,self.g)
+                resto.reverse()
+                sind = resto[0:self.n-self.k]
+                sind.reverse()
+                self.sindrome[pos] = sind
+                pos+=1
                 
     def calcSindrome(self,recebido):
         
