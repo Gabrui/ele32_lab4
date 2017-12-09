@@ -459,9 +459,8 @@ class decoder:
 
         while(True):
             
-            #print("\n calculando ... ", r)
-            #print("\n sindrome:",sind)
-            #print("\n g       :",self.g)
+           # print("\n sindrome:",sind)
+           # print("\n g       :",self.g)
             #print("\n sindromes:",self.sindrome.values())
             #time.sleep(1)
             
@@ -476,7 +475,7 @@ class decoder:
                     (menssage,zero) = self.op.div(r,self.g)
                     menssage.reverse()
                     
-                
+
                 mensagem = menssage[0:self.k]
                 mensagem.reverse()
                 return mensagem
@@ -493,6 +492,7 @@ class decoder:
                 #se nao rotaciona a mensagem e a sindrome
                 r = self.rotateDn(r)
                 sind = self.rotateSindrome(sind)
+                nRotation+=1
             if(r == roriginal):
                 return r
                 
@@ -711,12 +711,12 @@ texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G:
 arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
-"""
+
 
 L = 4
 n = pow(2,L)-1
 #k =  ceil(n/2)
-"""
+
 
 #constantes do 1+D7
 """
@@ -726,7 +726,7 @@ g7 = op.inverteArray(l7)
 g = g7
 """
 #------------------------------Fim das constantes do D7------------------------
-"""
+
 #constantes do 1+D15
 dmin = 5
 g = op.generateArray(465,14)
@@ -778,7 +778,7 @@ for i in range(5):
         print("\n\n polinomio gerador: ",g)
         print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
         print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
-"""
+
 #--------------------------Fim da area de impressao dos dados------------------
 #-------------------------------Area de testes------------------------------------
 """
@@ -788,13 +788,13 @@ numero = pow(2,L)-1
 #k = ceil(numero/2)
 k = 7
 dmin = 6
-mensagem = op.generateArray(1,k-1)
+mensagem = op.generateArray(13,k-1)
 print("mensagem: ",mensagem)
 #g7 = [1, 0, 1, 1, 0, 0, 0]
 #g7inv = op.inverteArray(g7)
 #print("\ng7inv",g7inv)
-#g15 = op.generateArray(465,14)
-g15 = [1, 1, 0, 1, 1, 1, 0, 1, 1]
+g15 = op.generateArray(465,14)
+#g15 = [1, 1, 0, 1, 1, 1, 0, 1, 1]
 mcoded = op.codificar(op.inverteArray(mensagem),g15)
 print("\n mcoded:",mcoded)
 print("mcodedinvertida:",op.inverteArray(mcoded))
@@ -805,18 +805,19 @@ print("mcodedinvertida:",op.inverteArray(mcoded))
 decodificador =  decoder(op.simplificaArray(g15),numero,k,dmin)
 
 print("\nmensagem codificada: ",mcoded)
-
-e = 0
+r = deepcopy(mcoded)
+r[0] ^=1
+r[2] ^=1 
+#e = 0
 #for i in range(32767+1):
-    
-r = op.generateArray(24,14)
-   # if(op.pesoHamming(r) < 3):
+   
+#r = op.generateArray(i,14)
+       # if(op.pesoHamming(r) < 3):
 mensagem = decodificador.decodifica(r)
-      #  e +=1
-print("\n r: ",r)
+            #e +=1
+            #print("\n r: ",r)
 print("\n mensagem decodificada: ",mensagem)
-       # print("e:",e)
-
+           # print("e:",e)
 """
 #print("erros corrigiveis:",e)
 
@@ -847,7 +848,7 @@ for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(dicwrite[index])
 arquivo.write(texto)
 arquivo.close()"""
-
+"""
 print("\n--------------------------Area de Testes-----------------------------")
 print("entrou")
 L = 7
@@ -860,7 +861,7 @@ G = op.generateG(g127,k,n)
 print("\ndistMIn",op.distMin(G)) 
 print("\n peso hamming:",op.pesoHamming(g127))  
 print("saiu")
-
+"""
 #------------------------------------------------------------------------------
 
 """
