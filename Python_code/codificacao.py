@@ -11,7 +11,7 @@ from math import ceil
 from math import floor
 from numpy import random
 import time
-from itertool import combinations
+from itertools import combinations
 
 class BinOperations:
     
