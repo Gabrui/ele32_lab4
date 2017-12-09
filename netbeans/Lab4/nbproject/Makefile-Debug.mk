@@ -39,11 +39,11 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-m64
 
 # CC Compiler Flags
-CCFLAGS=-m64 -save-temps -O3 -mpclmul -mavx -static
-CXXFLAGS=-m64 -save-temps -O3 -mpclmul -mavx -static
+CCFLAGS=-m64 -save-temps -O3 -mpclmul -mavx -static -march=native
+CXXFLAGS=-m64 -save-temps -O3 -mpclmul -mavx -static -march=native
 
 # Fortran Compiler Flags
 FFLAGS=

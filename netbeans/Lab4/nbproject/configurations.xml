@@ -35,11 +35,14 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <architecture>2</architecture>
+        </cTool>
         <ccTool>
           <developmentMode>0</developmentMode>
           <architecture>2</architecture>
           <commandlineTool>g++</commandlineTool>
-          <commandLine>-save-temps -O3 -mpclmul -mavx -static</commandLine>
+          <commandLine>-save-temps -O3 -mpclmul -mavx -static -march=native</commandLine>
           <warningLevel>2</warningLevel>
         </ccTool>
       </compileType>
