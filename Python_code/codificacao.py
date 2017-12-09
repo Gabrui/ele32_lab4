@@ -733,6 +733,16 @@ g = op.generateArray(465,14)
 k = 7
 #------------------------------Fim das constantes do D15------------------------
 
+
+
+#constantes do 1+D31
+dmin = 8
+l31 = [1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+g = op.inverteArray(l31)
+k = 16
+#------------------------------Fim das constantes do D31------------------------
+
+
 #Quantidade de bits a serem enviados
 quantBits = 1024000
 #quantidade de mensagens
