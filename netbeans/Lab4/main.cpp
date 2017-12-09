@@ -22,8 +22,8 @@
 using namespace std;
 
 static inline int popcnt128(__m128i n) {
-  const __m128i n_hi = _mm_unpackhi_epi64(n, n);
-  return _mm_popcnt_u64(_mm_cvtsi128_si64(n)) + _mm_popcnt_u64(_mm_cvtsi128_si64(n_hi));
+    const __m128i n_hi = _mm_unpackhi_epi64(n, n);
+    return _mm_popcnt_u64(_mm_cvtsi128_si64(n)) + _mm_popcnt_u64(_mm_cvtsi128_si64(n_hi));
 }
 
 static inline void p128_hex_u64(__m128i in) {
