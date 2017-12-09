@@ -10,7 +10,7 @@
  *
  * Created on 22 de Novembro de 2017, 15:28
  */
-
+#define ult64 ((unsigned long long) 1 << 63)
 #include <cstdio>
 #include <cstdlib>
 
@@ -37,13 +37,19 @@ static inline void p128_hex_u64(__m128i in) {
 int main(int argc, char** argv) {
     
     // Defino o vetor de fatores
-    
-    int grauEsperado = 63; // Grau necessário
-    unsigned long long int dados[] __attribute__ ((aligned (16))) = // Deve ter alinhamento
+    int grauEsperado = 127; // Grau necessário
+    alignas(16) unsigned long long int dados[] = // Deve ter alinhamento
        // {0b11, 0, 0b111, 0, 0b10011, 0, 0b11001, 0, 0b11111, 0};  // D15
-    {0b11,       0, 0b10000011, 0, 0b10001001, 0, 0b10001111, 0, 0b10010001, 0, 0b10011101, 0, 0b10100111, 0, 
+    /*{0b11,       0, 0b10000011, 0, 0b10001001, 0, 0b10001111, 0, 0b10010001, 0, 0b10011101, 0, 0b10100111, 0, 
      0b10101011, 0, 0b10111001, 0, 0b10111111, 0, 0b11000001, 0, 0b11001011, 0, 0b11010011, 0, 0b11010101, 0, 
-     0b11100101, 0, 0b11101111, 0, 0b11110001, 0, 0b11110111, 0, 0b11111101, 0}; // D127
+     0b11100101, 0, 0b11101111, 0, 0b11110001, 0, 0b11110111, 0, 0b11111101, 0}; // D127*/
+    {0b11, 0, 0b111, 0, 0b10011, 0, 0b11001, 0, 0b11111, 0, 0b100011011, 0, 0b100011101, 
+    0, 0b100101011, 0, 0b100101101, 0, 0b100111001, 0, 0b100111111, 0, 0b101001101, 
+    0, 0b101011111, 0, 0b101100011, 0, 0b101100101, 0, 0b101101001, 0, 0b101110001, 
+    0, 0b101110111, 0, 0b101111011, 0, 0b110000111, 0, 0b110001011, 0, 0b110001101, 
+    0, 0b110011111, 0, 0b110100011, 0, 0b110101001, 0, 0b110110001, 0, 0b110111101, 
+    0, 0b111000011, 0, 0b111001111, 0, 0b111010111, 0, 0b111011101, 0, 0b111100111, 
+    0, 0b111110011, 0, 0b111110101, 0, 0b111111001, 0};
     __m128i* fatores = (__m128i*) dados;
     
     // Inicialização para otimização
@@ -59,7 +65,8 @@ int main(int argc, char** argv) {
     for (int acum=0, i=quantFatores-1; acum<grauEsperado; quantMin++, i--)
         acum += graus[i];
     
-    unsigned long long quantComb = 1<<quantFatores;
+    unsigned long long quantComb = (unsigned long long) 1<<quantFatores;
+    printf("%llu\n", quantComb);
     int maiorDist = 0;
     unsigned long long maiorPos = 0;
     __m128i maior;
@@ -79,23 +86,33 @@ int main(int argc, char** argv) {
         // Se tiver o grau certo, efetuo a multiplicação
         if (grau == grauEsperado) {
             int ibits = _tzcnt_u64(pos);
-            __m128i mult = fatores[ibits++];
-            for (; ibits<quantFatores; ibits++)
-                if (pos & 1<<ibits)
-                    mult = _mm_clmulepi64_si128(mult, fatores[ibits], 0);
+            __m128i mult = fatores[ibits];
+            for (int ordem=graus[ibits++]; ibits<quantFatores; ibits++)
+                if (pos & 1<<ibits) {
+                    ordem+=graus[ibits];
+                    if (ordem < 64)
+                        mult = _mm_clmulepi64_si128(mult, fatores[ibits], 0);
+                    else
+                        mult = _mm_xor_si128(
+                                _mm_clmulepi64_si128(mult, fatores[ibits], 0), 
+                                _mm_slli_si128(_mm_clmulepi64_si128(mult, fatores[ibits], 1), 8));
+                }
             // Verifico se o resultado tem um peso de hamming mínimo
             int peso = popcnt128(mult);
-            if (peso >= maiorDist) {
+            if (peso > maiorDist) {
                 int dist = grauEsperado;
+                int distExtra = 0;
                 alignas(16) unsigned long long v[2];
                 _mm_store_si128((__m128i*)v, mult);
                 // Efetua o cálculo das distâncias mínimas
                 for (int i=1; i<=grauEsperado; i++) {
+                    if (v[1] & ult64)
+                        distExtra++;
                     v[1]<<=1;
-                    if (v[0] & ((unsigned long long) 1 << 63) ) 
+                    if (v[0] & ult64) 
                         v[1] |= 1;
                     v[0]<<=1;
-                    int d = popcnt128(_mm_xor_si128(mult, *((__m128i*)v) ));
+                    int d = popcnt128(_mm_xor_si128(mult, *((__m128i*)v) )) + distExtra;
                     if (d < dist)
                         dist = d;
                 }
