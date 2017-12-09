@@ -711,12 +711,12 @@ texto += "\nMaximo DistMin de todas as G: "+str(distMinMax)+"\n quantidade de G:
 arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
-
+"""
 
 L = 4
 n = pow(2,L)-1
 #k =  ceil(n/2)
-
+"""
 
 #constantes do 1+D7
 """
@@ -726,7 +726,7 @@ g7 = op.inverteArray(l7)
 g = g7
 """
 #------------------------------Fim das constantes do D7------------------------
-
+"""
 #constantes do 1+D15
 dmin = 5
 g = op.generateArray(465,14)
@@ -778,7 +778,7 @@ for i in range(5):
         print("\n\n polinomio gerador: ",g)
         print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
         print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
-
+"""
 #--------------------------Fim da area de impressao dos dados------------------
 #-------------------------------Area de testes------------------------------------
 """
@@ -847,18 +847,20 @@ for index in Gset:
     texto +="\n 1 + D^" + str(index) +"\n Fatores: \n" +"   " +str(dicwrite[index])
 arquivo.write(texto)
 arquivo.close()"""
-"""
+
 print("\n--------------------------Area de Testes-----------------------------")
 print("entrou")
-L = 4
+L = 7
 n = pow(2,L)-1
 k =  ceil(n/2)
 #g = op.generateArray(465,15)
-g=[1, 1, 0, 1, 1, 1, 0, 1, 1]
-G = op.generateG(g,k,n)
-print("\ndistMIn",op.distMin(G))   
+#g15=[1, 1, 0, 1, 1, 1, 0, 1, 1]
+g127 = [1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+G = op.generateG(g127,k,n)
+print("\ndistMIn",op.distMin(G)) 
+print("\n peso hamming:",op.pesoHamming(g127))  
 print("saiu")
-"""
+
 #------------------------------------------------------------------------------
 
 """
