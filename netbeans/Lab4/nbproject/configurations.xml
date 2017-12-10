@@ -42,9 +42,17 @@
           <developmentMode>0</developmentMode>
           <architecture>2</architecture>
           <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>/usr/local/boost_1_65_1</pElem>
+          </incDir>
           <commandLine>-save-temps -O3 -mpclmul -mavx -static -march=native</commandLine>
           <warningLevel>2</warningLevel>
         </ccTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>/usr/local/boost_1_65_1</pElem>
+          </linkerAddLib>
+        </linkerTool>
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

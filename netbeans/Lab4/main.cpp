@@ -11,13 +11,16 @@
  * Created on 22 de Novembro de 2017, 15:28
  */
 #define ult64 ((unsigned long long) 1 << 63)
+#define u64 unsigned long long int
 #include <cstdio>
 #include <cstdlib>
-
+#include <math.h> 
 #include <emmintrin.h>
 #include <wmmintrin.h>
 #include <smmintrin.h>
 #include <immintrin.h>
+#include <boost/math/special_functions/binomial.hpp>
+
 
 using namespace std;
 
@@ -33,32 +36,75 @@ static inline void p128_hex_u64(__m128i in) {
 }
 
 static inline void calculaProbabilidades() {
-    alignas(16) unsigned long long int gVec[] = {7, 0};
+    alignas(16) unsigned long long int gVec[] = {(u64) 0xda2dcc73, 0}; //{(u64) 0x0f733, 0}; //{0x01bb,0}; //{0b1011, 0};
+    alignas(16) unsigned long long int iVec[] = {1, 0};
     __m128i* g = (__m128i*) gVec;
-    unsigned int quantCorrigiveis = 1;
-    unsigned int tamCod = 7;
+    __m128i* i128 = (__m128i*) iVec;
+    int quantCorrigiveis = 8; //3; //2; //1;
+    int tamCod = 63; //31; //15; //7;
+    int quantInfo = 32; //16; //7; //4;
+    u64 max =(u64) 1<<30; //1<<quantInfo;
+    u64* erros = (u64*) calloc(tamCod+quantCorrigiveis+3, sizeof(u64));
+    unsigned int* qAmostras = (unsigned int*) calloc(tamCod+quantCorrigiveis+3, sizeof(int));
+    for (; iVec[0]<max; iVec[0]++) {
+        __m128i prod = _mm_clmulepi64_si128(*g, *i128, 0);
+        u64 erroFinal = _mm_popcnt_u64(iVec[0]);
+        u64 erroCod = popcnt128(prod);
+        for (int i=-quantCorrigiveis; i<=quantCorrigiveis; i++) {
+            erros[erroCod+i] += erroFinal;
+            qAmostras[erroCod+i]++;
+        }
+    }
+    for (int i=0; i<=quantCorrigiveis; i++) {
+        erros[i] = 0;
+        qAmostras[i]++;
+    }
+    double razao[tamCod+1];
+    printf("[");
+    for (int i=0; i<=tamCod; i++) {
+        razao[i] =  ((double) erros[i])/qAmostras[i]/quantInfo;
+        printf("%e",razao[i]);
+        if (i!=tamCod)
+            printf(", ");
+    }
+    printf("]\n");
+    double binomiais[tamCod+1];
+    for (int i=0; i<=tamCod; i++)
+        binomiais[i] = boost::math::binomial_coefficient<double>(tamCod, i); 
+    for (double p=0.5; p>0.000001; p/=2) {
+        double ber = 0;
+        for (int i = 0; i<=tamCod; i++) {
+            ber += pow(p, i)*pow((1-p),tamCod-i)*binomiais[i]*razao[i];
+        }
+        printf("%e\n", ber);
+    }
 }
 /*
  * 
  */
 int main(int argc, char** argv) {
-    
+    calculaProbabilidades();
     // Defino o vetor de fatores
-    int grauEsperado = 127; // Grau necessário
+    int grauEsperado = 31; //127; // Grau necessário
     alignas(16) unsigned long long int dados[] = // Deve ter alinhamento
-       // {0b11, 0, 0b111, 0, 0b10011, 0, 0b11001, 0, 0b11111, 0};  // D15
+    //{0b011, 0, 0b1011, 0, 0b1101, 0}; // D7
+    // {0b11, 0, 0b111, 0, 0b10011, 0, 0b11001, 0, 0b11111, 0};  // D15
+    // {0b11, 0, 0b100101, 0, 0b101001, 0, 0b101111, 0, 0b110111, 0, 0b111011, 0, 0b111101, 0}; // D31
+    {0b0000011, 0, 0b0000111, 0, 0b0001011, 0, 0b0001101, 0, 0b1000011, 0, 0b1001001, 0, 
+     0b1010111, 0, 0b1011011, 0, 0b1100001, 0, 0b1100111, 0, 0b1101101, 0, 0b1110011, 0, 0b1110101, 0}; //D63
     /*{0b11,       0, 0b10000011, 0, 0b10001001, 0, 0b10001111, 0, 0b10010001, 0, 0b10011101, 0, 0b10100111, 0, 
      0b10101011, 0, 0b10111001, 0, 0b10111111, 0, 0b11000001, 0, 0b11001011, 0, 0b11010011, 0, 0b11010101, 0, 
      0b11100101, 0, 0b11101111, 0, 0b11110001, 0, 0b11110111, 0, 0b11111101, 0}; // D127*/
-    {0b11, 0, 0b111, 0, 0b10011, 0, 0b11001, 0, 0b11111, 0, 0b100011011, 0, 0b100011101, 
+    /*{0b11, 0, 0b111, 0, 0b10011, 0, 0b11001, 0, 0b11111, 0, 0b100011011, 0, 0b100011101, 
     0, 0b100101011, 0, 0b100101101, 0, 0b100111001, 0, 0b100111111, 0, 0b101001101, 
     0, 0b101011111, 0, 0b101100011, 0, 0b101100101, 0, 0b101101001, 0, 0b101110001, 
     0, 0b101110111, 0, 0b101111011, 0, 0b110000111, 0, 0b110001011, 0, 0b110001101, 
     0, 0b110011111, 0, 0b110100011, 0, 0b110101001, 0, 0b110110001, 0, 0b110111101, 
     0, 0b111000011, 0, 0b111001111, 0, 0b111010111, 0, 0b111011101, 0, 0b111100111, 
-    0, 0b111110011, 0, 0b111110101, 0, 0b111111001, 0};
+    0, 0b111110011, 0, 0b111110101, 0, 0b111111001, 0};*/ // D255
     __m128i* fatores = (__m128i*) dados;
     
+    /*
     // Inicialização para otimização
     int quantFatores = sizeof(dados)/16; // Tamanho do vetor fatores
     int* graus = (int*) malloc(quantFatores*sizeof(int));
@@ -73,7 +119,6 @@ int main(int argc, char** argv) {
         acum += graus[i];
     
     unsigned long long quantComb = (unsigned long long) 1<<quantFatores;
-    printf("%llu\n", quantComb);
     int maiorDist = 0;
     unsigned long long maiorPos = 0;
     __m128i maior;
@@ -134,28 +179,7 @@ int main(int argc, char** argv) {
         }
     }
     
-    
-    /*
-    int src = 11;
-    int dst;
-    asm ("mov %1, %0\n\t"
-        "add $100, %0"
-        : "=r" (dst) 
-        : "r" (src));
-
-    printf("%d\n", dst);
-    
-    
-    __m128i a = _mm_set1_epi64x(3);
-    __m128i b = _mm_set1_epi64x(5);
-    __m128i tmp0 = _mm_clmulepi64_si128(a, b, 0);
-    
-    // unsigned long long int *v64val = (unsigned long long int*) &tmp0;
-    // printf("%.16llx %.16llx\n", v64val[1], v64val[0]);
-    printf("%d", sizeof(short));
-    */
-    
     p128_hex_u64(maior);
-    printf("Distância Mínima %d, Posição %llu", maiorDist, maiorPos);
+    printf("Distância Mínima %d, Posição %llu", maiorDist, maiorPos); /**/
     return 0;
 }
