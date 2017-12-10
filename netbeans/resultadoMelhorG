@@ -1,3 +1,9 @@
+D7
+0000000000000000 000000000000000b
+[1, 0, 1, 1]
+Distância Mínima 3(Peso), Posição 2
+
+
 D15
 hexadecimal = 00000000000001bb
 [1, 1, 0, 1, 1, 1, 0, 1, 1]
@@ -5,11 +11,23 @@ hexadecimal = 00000000000001bb
 Distância Mínima 6, Posição 12
 
 
+D31
+0000000000000000 000000000000f733
+Distância Mínima 8, Posição 22
+
+
+D63
+0000000000000000 00000000da2dcc73
+Distância Mínima 18, Posição 477
+
+
+
 D127
 hexadecimal = adcd2db30f0ea75f
 G tem grau 63
 [1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1]
 Distância Mínima 36, Posição 40904
+
 
 D255
 f69b2c73a079ade5 ccaa3acb13d1a93f
