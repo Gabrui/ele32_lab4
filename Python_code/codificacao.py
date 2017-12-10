@@ -12,6 +12,7 @@ from math import floor
 from numpy import random
 import time
 from itertools import combinations
+from math import factorial
 
 class BinOperations:
     
@@ -727,11 +728,11 @@ arquivo.write(texto)
 arquivo.close()"""
 #------------------------------------------------------------------------------
 
-
+"""
 L = 5
 n = pow(2,L)-1
 #k =  ceil(n/2)
-
+"""
 
 #constantes do 1+D7
 """
@@ -755,7 +756,7 @@ g = g7
 #g = op.inverteArray(l31)
 #k = 16
 #------------------------------Fim das constantes do D63------------------------
-
+"""
 dmin = 18
 l63 = [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 g = op.inverteArray(l63)
@@ -818,7 +819,7 @@ for i in range(5):
         print("\n\n polinomio gerador: ",g)
         print("\n\n Probabilidade de Erro sem decodificacao: ", erroIntro/quantBits)
         print("\n\n Probabilidade de erro apos decodificacao: ",Pe)
-
+"""
 #--------------------------Fim da area de impressao dos dados------------------
 #-------------------------------Area de testes------------------------------------
 """
@@ -909,3 +910,19 @@ Observacoes de coisas para fazer:
 Parece que tá faltando primo divisor de 1+D^255
 Deve ter primo maior do que 8 bits que divide 1+D^255
 """
+
+def Qs(n,e):
+    
+    resultado = 0
+    for erro in range(1,e+1):
+        produto = 1
+        for i in range(n-erro+1,n):
+        
+            produto *=i
+        produto = produto/factorial(erro-1)    
+        print("\n produto",produto)
+        resultado +=produto
+    
+    return resultado
+
+print("\n quantidade de sindromes de erro no ultimo bit:",Qs(255,34))
