@@ -31,6 +31,13 @@ static inline void p128_hex_u64(__m128i in) {
     _mm_store_si128((__m128i*)v, in);
     printf("%.16llx %.16llx\n", v[1], v[0]);
 }
+
+static inline void calculaProbabilidades() {
+    alignas(16) unsigned long long int gVec[] = {7, 0};
+    __m128i* g = (__m128i*) gVec;
+    unsigned int quantCorrigiveis = 1;
+    unsigned int tamCod = 7;
+}
 /*
  * 
  */
