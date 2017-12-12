@@ -17,6 +17,8 @@ O algoritmo simplificado apresentado em sala consistia de, em primeiro lugar, di
 
 Para as instruções de assembly, escritas em C, utilizou-se cabeçalhos que encapsulavam o código de assembly emmintrin.h, wmmintrin.h, smmintrin.h e immintrin.h. As instruções utilizadas foram _mm_unpackhi_epi64, _mm_cvtsi128_si64 e _mm_store_si128para manipulaçao de 128 bits; _mm_popcnt_u64 para o cálculo do peso de hamming para uma palavra de 64 bits; _mm_clmulepi64_si128 para a multiplicação sem carry de 64 bits; _mm_xor_si128 para a soma módulo 2 de uma palavra de 128 bits; _mm_slli_si128 para o deslocamento de uma palavra de 128 bits. Essas instruções fazem parte do conjunto de intruções SSE da Intel ou 3DNow da AMD, sendo necessários um processador da 3ª geração da Intel (Ivy Bridge) ou equivalente da AMD para que o programa possa ser executado. Utilizou-se o compilador GCC versão 7.2 com as flags -save-temps -O3 -mpclmul -mavx -static -march=native habilitadas, que geram um código otimizado e utilizam as instruções citadas anteriormente. Durante este trabalho, utilizou-se um processador i7-4510U, com 8Gb de RAM disponíveis.
 
+Atualizar.
+
 
 
 
